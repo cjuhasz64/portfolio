@@ -62,13 +62,16 @@ export default class InteractableGridCell extends Component<Props, State> {
       <div className="relative">
         <div 
           onClick={onClick} 
-          className={`${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
+          className={`${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-20`}
           onMouseEnter={() => this.setIsFocus(true)}
           onMouseLeave={() => this.setIsFocus(false)}
           >
             <img src={ theme === 'dark' ? darkSymbolLink : lightSymbolLink} alt="Italian Trulli" className={`${scale ? scale : 'scale-90'} fill-red-400` } />
             <p className='text-xs font-semibold text-white dark:text-slate-800'>{ focus ? title : ''}</p>
         </div>
+        {/* <div 
+          className={`animate-pulse ${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
+          ></div> */}
       </div>
     )
   }
