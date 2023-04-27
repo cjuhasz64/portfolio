@@ -15,7 +15,8 @@ interface Node {
   state: CellState,
   isVisited: boolean,
   distance: number,
-  previousNode: Node | null
+  previousNode: Node | null,
+  weight: number
 }
 
 function getNode (grid: Node [], id: string): Node | null {
@@ -38,7 +39,7 @@ export function bfs (grid: Node [], gridWidth: number, startNode: Node): Node []
   while (queue.length > 0) {
     let currentNode = queue.shift();
     
-    let neighbours = getValidNeighbours(grid, width, visited, currentNode!)
+    let neighbours = getValidNeighbours(grid, width, currentNode!, visited)
 
     for (let i = 0; i < neighbours.length; i++) {
       let currentNeighbour = neighbours[i]
@@ -69,7 +70,7 @@ export function dfs (grid: Node [], gridWidth: number, startNode: Node): Node []
   while (stack.length > 0) {
     let currentNodeID = stack.pop();
 
-    let neighbours = getValidNeighbours(grid, width, visited, currentNodeID!)
+    let neighbours = getValidNeighbours(grid, width, currentNodeID!, visited)
 
     for (let i = 0; i < neighbours.length; i++) {
       let currentNeighbour = neighbours[i]
@@ -91,7 +92,50 @@ export function aStar (grid: Node [], gridWidth: number, startNode: string): Nod
 }
 
 
-export function dijkstra(grid: Node [], gridWidth: number, startNode: Node) {
+export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Node [] {
+  const width = gridWidth;
+
+  let queue: Node [] = [];
+  let visited: Node [] = [];
+
+  grid.map(node => {
+    queue.push(node)
+  })
+
+  visited.push(startNode);
+
+  startNode.distance = 0
+
+  while (queue.length > 0) {
+    sortNodesByDistance(queue);
+
+    let currentNode = queue.shift();
+
+    let neighbours = getValidNeighbours(queue, width, currentNode!, visited)
+
+    for (let i = 0; i < neighbours.length; i++) {
+      let currentNeighbour = neighbours[i]
+
+      let temp = currentNode!.distance + currentNeighbour.weight
+      if (temp < currentNeighbour.distance) {
+        currentNeighbour.distance = temp
+        currentNeighbour.previousNode = currentNode!
+      }
+
+      if (currentNeighbour.distance === Infinity) return visited
+
+      if (currentNode!.state === CellState.TARGET) {
+        return visited;
+      }
+
+    }
+    visited.push(currentNode!)
+  }
+    
+  return visited
+
+
+
   // const width = gridWidth;
 
   // let visited: Node [] = []
@@ -121,7 +165,9 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node) {
   //   setNewDistances(grid, closestNode, getValidNeighbours(grid, width, visited, closestNode.id))
   // }
 
-  // return []
+
+
+  return []
 }
 
 function setNewDistances(grid: Node[], closestNode: Node, neighbourIDs: string []) {
@@ -146,7 +192,7 @@ function sortNodesByDistance(nodes: Node []) {
   nodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }
 
-function getValidNeighbours (grid: Node [], gridWidth: number, visted: Node [], currentNode: Node): Node[] {
+function getValidNeighbours (grid: Node [], gridWidth: number, currentNode: Node, visted?: Node []): Node[] {
 
   const width = gridWidth;
   const height = grid.length / width;
@@ -156,22 +202,22 @@ function getValidNeighbours (grid: Node [], gridWidth: number, visted: Node [], 
   let y = currentNode.id.split(',')[1]
 
   let left = getNode(grid, `${Number(x) - 1},${y}`.trim())
-  if (left && left.state != CellState.WALL && !visted.includes(left)) {
+  if (left && left.state != CellState.WALL && !visted!.includes(left)) {
     output.push(left)
   }
 
   let up = getNode(grid, `${x},${Number(y) - 1}`.trim())
-  if (up && up.state != CellState.WALL && !visted.includes(up)) {
+  if (up && up.state != CellState.WALL && !visted!.includes(up)) {
     output.push(up)
   }
 
   let right = getNode(grid, `${Number(x) + 1},${y}`.trim())
-  if (right && right.state != CellState.WALL && !visted.includes(right)) {
+  if (right && right.state != CellState.WALL && !visted!.includes(right)) {
     output.push(right)
   }
   
   let down = getNode(grid, `${x},${Number(y) + 1}`.trim())
-  if (down && down.state != CellState.WALL && !visted.includes(down)) {
+  if (down && down.state != CellState.WALL && !visted!.includes(down)) {
     output.push(down)
   }
 

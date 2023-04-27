@@ -25,7 +25,8 @@ interface Props {
   updateCellState: (args0: string, args1: CellState) => void,
   cellState: CellState,
   isVisited: boolean,
-  isShortestPath: boolean
+  isShortestPath: boolean,
+  weight: number
 }
 
 interface State {

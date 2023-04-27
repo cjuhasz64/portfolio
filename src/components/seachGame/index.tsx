@@ -68,7 +68,8 @@ interface Node {
   isVisited: boolean,
   isShortestPath: boolean
   distance: number,
-  previousNode: Node | null
+  previousNode: Node | null,
+  weight: number
 }
 
 interface Props { 
@@ -125,6 +126,7 @@ export default class SearchGame extends Component<Props, State> {
           key={grid[i].id}
           isVisited={grid[i].isVisited}
           isShortestPath = {grid[i].isShortestPath}
+          weight={grid[i].weight}
         />
       )
     }
@@ -134,7 +136,6 @@ export default class SearchGame extends Component<Props, State> {
   updateCellState (id: string, state: CellState) {
     const { startNode, goalNode } = this.state;
  
-
     // handle single start pos
     if (state === CellState.SOURCE) {
       this.updateCellState(startNode!, CellState.EMPTY)
@@ -150,7 +151,6 @@ export default class SearchGame extends Component<Props, State> {
       })
     }
 
-
     // handle single end pos
     if (state === CellState.EMPTY && id === startNode) {
       this.setState({
@@ -163,9 +163,12 @@ export default class SearchGame extends Component<Props, State> {
         goalNode: null
       })
     }
+
     this.setState( prev => ({
       grid: prev.grid.map(x => {
         if (x.id === id) {
+          if (state === CellState.WEIGHT) x.weight = 5
+          else if (state === CellState.EMPTY) x.weight = 1
           x.state = state
         } 
         return x
@@ -222,7 +225,7 @@ export default class SearchGame extends Component<Props, State> {
         x.isShortestPath = false;
         x.isVisited = false;
         x.distance = Infinity;
-        x.previousNode = null
+        x.previousNode = null;
         return x
       })
     }))
@@ -235,7 +238,8 @@ export default class SearchGame extends Component<Props, State> {
       isVisited: false,
       isShortestPath: false,
       distance: Infinity,
-      previousNode: null
+      previousNode: null,
+      weight: 1
     }
   }
 
@@ -250,7 +254,7 @@ export default class SearchGame extends Component<Props, State> {
       case 'A Star':
         return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
       case 'Dijkstra`s':
-        return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
+        return dijkstra(grid, this.WIDTH, this.getNode(grid, startNode!)!);
     }
     return [];
   }
