@@ -92,8 +92,8 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={ skills_dark } 
               color='bg-red-400' 
               darkColor='dark:bg-green-500'
-              focusColor='hover:bg-red-500'
-              darkFocusColor='dark:hover:bg-green-300'
+              hoverColor='hover:bg-red-500'
+              darkHoverColor='dark:hover:bg-green-300'
               scale='scale-75'
             />)
             continue;
@@ -110,8 +110,8 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={about_dark} 
               color='bg-red-400'  
               darkColor='dark:bg-green-500'
-              focusColor='hover:bg-red-500'
-              darkFocusColor='dark:hover:bg-green-300' 
+              hoverColor='hover:bg-red-500'
+              darkHoverColor='dark:hover:bg-green-300' 
               focusHeight='28'
             />)
             continue;
@@ -127,9 +127,9 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={ github } 
               darkSymbolLink={github_dark} 
               color='bg-purple-300' 
-              focusColor='hover:bg-purple-400' 
+              hoverColor='hover:bg-purple-400' 
               darkColor='hover:bg-purple-400'
-              darkFocusColor='bg-purple-300'
+              darkHoverColor='bg-purple-300'
               scale='scale-75' 
             />)
             continue;
@@ -146,8 +146,8 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={projects_dark} 
               color='bg-red-400' 
               darkColor='dark:bg-green-500'
-              focusColor='hover:bg-red-500'
-              darkFocusColor='dark:hover:bg-green-300'
+              hoverColor='hover:bg-red-500'
+              darkHoverColor='dark:hover:bg-green-300'
               scale='scale-75'
             />)
             continue;
@@ -187,7 +187,7 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={back} 
               darkSymbolLink={back_dark} 
               color='bg-blue-500' 
-              focusColor='hover:bg-blue-600'
+              hoverColor='hover:bg-blue-600'
               scale='scale-75'
             />)
             continue;
@@ -230,7 +230,7 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={back} 
               darkSymbolLink={back_dark} 
               color='bg-blue-500' 
-              focusColor='hover:bg-blue-600'
+              hoverColor='hover:bg-blue-600'
               scale='scale-75'
             />)
             continue;
@@ -247,7 +247,7 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={search} 
               darkSymbolLink={search_dark} 
               color='bg-orange-400' 
-              focusColor='hover:bg-orange-500'
+              hoverColor='hover:bg-orange-500'
               scale='scale-75'
             />)
             continue;
@@ -264,7 +264,7 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={back} 
               darkSymbolLink={back_dark} 
               color='bg-blue-500' 
-              focusColor='hover:bg-blue-600'
+              hoverColor='hover:bg-blue-600'
               scale='scale-75'
             />)
             continue;

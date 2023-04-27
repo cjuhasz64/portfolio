@@ -6,6 +6,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        }
+      },
       gridTemplateColumns: {
         '20': 'repeat(20, minmax(0, 1fr))',
         '40': 'repeat(40, minmax(0, 1fr))',

@@ -11,9 +11,10 @@ interface Props {
   focusHeight?: string,
   color: string,
   darkColor?: string,
-  focusColor?: string,
-  darkFocusColor?: string,
+  hoverColor?: string,
+  darkHoverColor?: string,
   onClick?: () => void
+  isDisabled?: boolean
 }
 
 interface State {
@@ -47,13 +48,13 @@ export default class InteractableGridCell extends Component<Props, State> {
   }
 
   render () {
-    const { darkSymbolLink, lightSymbolLink, title, scale, focusHeight, theme, onClick} = this.props;
+    const { darkSymbolLink, lightSymbolLink, title, scale, focusHeight, theme, onClick, isDisabled} = this.props;
 
     const {
       color,
       darkColor,
-      focusColor,
-      darkFocusColor
+      hoverColor,
+      darkHoverColor
     } = this.props
 
     const { focus } = this.state;
@@ -62,15 +63,15 @@ export default class InteractableGridCell extends Component<Props, State> {
       <div className="relative">
         <div 
           onClick={onClick} 
-          className={`${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-20`}
+          className={`${color} ${darkColor} ${hoverColor} ${darkHoverColor} w-14 h-14 ${title && !isDisabled ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
           onMouseEnter={() => this.setIsFocus(true)}
           onMouseLeave={() => this.setIsFocus(false)}
           >
-            <img src={ theme === 'dark' ? darkSymbolLink : lightSymbolLink} alt="Italian Trulli" className={`${scale ? scale : 'scale-90'} fill-red-400` } />
-            <p className='text-xs font-semibold text-white dark:text-slate-800'>{ focus ? title : ''}</p>
+            <img src={ theme === 'dark' ? darkSymbolLink : lightSymbolLink} alt="Italian Trulli" className={`${scale ? scale : 'scale-90'} fill-red-400 ${ isDisabled ? 'opacity-25' : ''}`} />
+            <p className='text-xs font-semibold text-white dark:text-slate-800'>{ focus && !isDisabled ? title : ''}</p>
         </div>
         {/* <div 
-          className={`animate-pulse ${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
+          className={`animate-bounce ${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
           ></div> */}
       </div>
     )

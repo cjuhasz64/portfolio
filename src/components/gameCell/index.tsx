@@ -6,6 +6,7 @@ import { Pages, Links, SearchAction } from '../../config/enums';
 import star_gold from '../.././images/projects/game_search/star_gold.png' 
 import wall from '../.././images/projects/game_search/wall.png' 
 import start from '../.././images/projects/game_search/start.png' 
+import weight from '../.././images/projects/game_search/weight.png' 
 
 
 
@@ -13,7 +14,8 @@ enum CellState {
   SOURCE,
   EMPTY,
   WALL,
-  TARGET
+  TARGET,
+  WEIGHT
 }
 
 interface Props { 
@@ -53,6 +55,8 @@ export default class GameCell extends Component<Props, State> {
       updateCellState(id, CellState.WALL)
     } else if (currentAction === SearchAction.SOURCE) {
       updateCellState(id, CellState.SOURCE)
+    } else if (currentAction === SearchAction.WEIGHT) {
+      updateCellState(id, CellState.WEIGHT)
     }
   }
 
@@ -77,6 +81,12 @@ export default class GameCell extends Component<Props, State> {
             <img src={start} alt="Italian Trulli" className={'scale-50'}/> :
             null
           } 
+
+          { 
+            cellState === CellState.WEIGHT ?
+            <img src={weight} alt="Italian Trulli" className={'scale-[.6]'}/> :
+            null
+          }
         </div>
  
     )

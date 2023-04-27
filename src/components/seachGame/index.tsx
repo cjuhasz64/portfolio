@@ -1,9 +1,10 @@
 import React from 'react';
 import logo from './logo.svg';
 import { Component } from 'react';
-import { Pages, Links, SearchAction } from '../../config/enums';
+import { Pages, Links, SearchAction, Colour } from '../../config/enums';
 import InteractableGridCell from '../interactableGridCell';
 import GameCell from '../gameCell';
+import DropDown from '../dropdown';
 
 import about from '../.././images/about.png'
 import projects from '../.././images/projects.png'
@@ -34,11 +35,13 @@ import eraser_dark from '../.././images/projects/game_search/eraser_dark.png'
 import wall from '../.././images/projects/game_search/wall.png'
 import wall_dark from '../.././images/projects/game_search/wall.png'
 
+import weight from '../.././images/projects/game_search/weight.png'
+
 import play from '../.././images/projects/game_search/play.png'
-import play_dark from '../.././images/projects/game_search/play_dark.png'
+
+import pause from '../.././images/projects/game_search/pause.png'
 
 import reset from '../.././images/projects/game_search/reset.png'
-import reset_dark from '../.././images/projects/game_search/reset_dark.png'
 
 import start from '../.././images/projects/game_search/start.png'
 
@@ -48,7 +51,8 @@ enum CellState {
   SOURCE,
   EMPTY,
   WALL,
-  TARGET
+  TARGET,
+  WEIGHT
 }
 
 enum GameState {
@@ -79,7 +83,8 @@ interface State {
   grid: Node[],
   startNode: string | null,
   goalNode: string | null
-  gameState: GameState
+  gameState: GameState,
+  sortCode: string | null
 }
 
 
@@ -95,9 +100,11 @@ export default class SearchGame extends Component<Props, State> {
       grid: [],
       startNode: null,
       goalNode: null,
-      gameState: GameState.IDLE
+      gameState: GameState.IDLE,
+      sortCode: null
     }
     this.updateCellState = this.updateCellState.bind(this)
+    this.setSortCode = this.setSortCode.bind(this)
   }
 
   componentDidMount(): void {
@@ -146,7 +153,6 @@ export default class SearchGame extends Component<Props, State> {
 
     // handle single end pos
     if (state === CellState.EMPTY && id === startNode) {
-      console.log('2')
       this.setState({
         startNode: null
       })
@@ -204,6 +210,11 @@ export default class SearchGame extends Component<Props, State> {
       grid: temp
     })
   }
+  setSortCode (code: string) {
+    this.setState({
+      sortCode: code
+    })
+  }
 
   resetCellData () {
     this.setState( prev => ({
@@ -228,8 +239,24 @@ export default class SearchGame extends Component<Props, State> {
     }
   }
 
+
+  getVisted (code: string) {
+    const { grid, startNode } = this.state;
+    switch (code) {
+      case 'Breadth First Search':
+        return bfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
+      case 'Depth First Search':
+        return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
+      case 'A Star':
+        return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
+      case 'Dijkstra`s':
+        return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
+    }
+    return [];
+  }
+
   animate (code: string): void {
-    const { grid, startNode, goalNode } = this.state;
+    const { grid, startNode, goalNode, sortCode } = this.state;
     
     if (startNode === null) {
       alert('add start node')
@@ -241,13 +268,21 @@ export default class SearchGame extends Component<Props, State> {
       return
     }
 
+    // check if sort type is selected
+    if (!sortCode) {
+      alert('select sort')
+      return
+    }
+
     this.setState({
       gameState: GameState.RUNNING
     })
 
-
+    
+    
+    const visistedInOrder = this.getVisted(sortCode)
     // get visted order, and display it
-    const visistedInOrder = bfs(grid, this.WIDTH, this.getNode(grid, startNode)!)
+    // const visistedInOrder = bfs(grid, this.WIDTH, this.getNode(grid, startNode)!)
     for (let i = 0; i < visistedInOrder!.length; i++) {
       setTimeout(() => {
         this.setCellVisited(visistedInOrder[i].id)
@@ -293,7 +328,7 @@ export default class SearchGame extends Component<Props, State> {
     const {navigate, theme, toggleDark} = this.props;
     const { currentAction, grid, gameState } = this.state;
     let controls: JSX.Element[] = []
-    const redElement: JSX.Element = <div className="bg-blue-300 dark:bg-slate-600 w-14 h-14 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 rounded-md"></div>
+    const redElement: JSX.Element = <div className={`${'bg-blue-300'} ${'hover:bg-blue-400'} ${'dark:bg-slate-600'} ${'hover:dark:bg-blue-200'} w-14 h-14 duration-200 rounded-md`}></div>
 
     for (let i = 0; i < 20; i++) {
       // dark toggle
@@ -301,43 +336,21 @@ export default class SearchGame extends Component<Props, State> {
         controls.push(
         <InteractableGridCell 
           onClick={toggleDark} 
-          theme={ theme } 
-          lightSymbolLink={ sun } 
-          darkSymbolLink={ moon } 
+          theme={theme} 
+          lightSymbolLink={sun} 
+          darkSymbolLink={moon} 
           color='bg-blue-300'
           darkColor='dark:bg-black'
           scale='scale-75'
           />)
         continue;
       }
-      // goal
-      if (i === 1) {
-        // goal
-        controls.push(
-        <InteractableGridCell 
-          title={<span>TARGET</span>}
-          onClick={() => {
-            if (gameState === GameState.IDLE) {
-              this.setState( {currentAction: SearchAction.TARGET} )
-            }
-          }}
-          theme={theme} 
-          lightSymbolLink={star_gold} 
-          darkSymbolLink={star_gold} 
-          color={ currentAction === SearchAction.TARGET ? 'bg-red-300' : 'bg-blue-300'}
-          focusColor='hover:bg-blue-600'
-          darkColor={ currentAction === SearchAction.TARGET ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkFocusColor='hover:dark:bg-blue-200'
-          scale='scale-75'
-        />)
-        continue;
-      }
 
       // start 
-      if (i === 2) {
+      if (i === 1) {
         controls.push(
         <InteractableGridCell 
-          title={<span>SOURCE</span>}
+          title={<span>Source</span>}
           onClick={() => {
             if (gameState === GameState.IDLE) {
               this.setState( {currentAction: SearchAction.SOURCE} )
@@ -346,20 +359,51 @@ export default class SearchGame extends Component<Props, State> {
           theme={theme} 
           lightSymbolLink={start} 
           darkSymbolLink={start} 
-          color={ currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'bg-blue-300'}
-          focusColor='hover:bg-blue-600'
-          darkColor={ currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkFocusColor='hover:dark:bg-blue-200'
+          color={currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'bg-blue-300'}
+          hoverColor={'hover:bg-blue-400'}
+          darkColor={currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'dark:bg-slate-600'}
+          darkHoverColor={'hover:dark:bg-blue-200'}
           scale='scale-75'
+          isDisabled={ gameState != GameState.IDLE }
         />)
         continue;
       }
 
-      // wall
-      if (i === 3) {
+      // target
+      if (i === 2) {
+        // target
         controls.push(
         <InteractableGridCell 
-          title={<span>WALL</span>}
+          title={<span>Target</span>}
+          onClick={() => {
+            if (gameState === GameState.IDLE) {
+              this.setState( {currentAction: SearchAction.TARGET} )
+            }
+          }}
+          theme={theme} 
+          lightSymbolLink={star_gold} 
+          darkSymbolLink={star_gold} 
+          color={currentAction === SearchAction.TARGET ? 'bg-red-300' : 'bg-blue-300'}
+          hoverColor={'hover:bg-blue-400'}
+          darkColor={currentAction === SearchAction.TARGET ? 'bg-red-300' : 'dark:bg-slate-600'}
+          darkHoverColor={'hover:dark:bg-blue-200'}
+          scale='scale-75'
+          isDisabled={gameState != GameState.IDLE }
+        />)
+        continue;
+      }
+
+
+      //
+      //    ADDITIONAL TARGETS
+      //
+      //
+
+      // wall
+      if (i === 4) {
+        controls.push(
+        <InteractableGridCell 
+          title={<span>Wall</span>}
           onClick={() => {
             if (gameState === GameState.IDLE) {
               this.setState( {currentAction: SearchAction.WALL} )
@@ -368,16 +412,41 @@ export default class SearchGame extends Component<Props, State> {
           theme={theme} 
           lightSymbolLink={wall} 
           darkSymbolLink={wall_dark} 
-          color={ currentAction === SearchAction.WALL ? 'bg-red-300' : 'bg-blue-300'} 
-          focusColor='hover:bg-blue-600'
-          darkColor={ currentAction === SearchAction.WALL ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkFocusColor='hover:dark:bg-blue-200'
+          color={currentAction === SearchAction.WALL ? 'bg-red-300' : 'bg-blue-300'}
+          hoverColor={'hover:bg-blue-400'}
+          darkColor={currentAction === SearchAction.WALL ? 'bg-red-300' : 'dark:bg-slate-600'}
+          darkHoverColor={'hover:dark:bg-blue-200'}
           scale='scale-[0.65]'
+          isDisabled={gameState != GameState.IDLE }
         />)
         continue;
       }
 
-      if (i === 4) {
+      // weight
+      if (i === 5) {
+        controls.push(
+        <InteractableGridCell 
+          title={<span>Weight</span>}
+          onClick={() => {
+            if (gameState === GameState.IDLE) {
+              this.setState( {currentAction: SearchAction.WEIGHT} )
+            }
+          }}
+          theme={theme} 
+          lightSymbolLink={weight} 
+          darkSymbolLink={weight} 
+          color={currentAction === SearchAction.WEIGHT ? 'bg-red-300' : 'bg-blue-300'}
+          hoverColor={'hover:bg-blue-400'}
+          darkColor={currentAction === SearchAction.WEIGHT ? 'bg-red-300' : 'dark:bg-slate-600'}
+          darkHoverColor={'hover:dark:bg-blue-200'}
+          scale='scale-[0.65]'
+          isDisabled={gameState != GameState.IDLE }
+        />)
+        continue;
+      }
+      
+      // erase
+      if (i === 6) {
         controls.push(
         <InteractableGridCell 
           title={<span>Erase</span>}
@@ -387,22 +456,23 @@ export default class SearchGame extends Component<Props, State> {
             }
           }}
           theme={theme} 
-          lightSymbolLink={eraser} 
+          lightSymbolLink={eraser_dark} 
           darkSymbolLink={eraser_dark} 
-          color={ currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'bg-blue-300'}
-          focusColor='hover:bg-red-500'
-          darkColor={ currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkFocusColor='hover:dark:bg-red-500'
+          color={currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'bg-blue-300'}
+          hoverColor='hover:bg-red-500'
+          darkColor={currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'dark:bg-slate-600'}
+          darkHoverColor='hover:dark:bg-red-500'
           scale='scale-75'
+          isDisabled={gameState != GameState.IDLE }
         />)
         continue;
       }
 
       // start_game
-      if (i === 9) {
+      if (i === 7) {
         controls.push(
         <InteractableGridCell 
-          title={<span>START</span>}
+          title={<span>Start</span>}
           onClick={() => {
             if (gameState === GameState.IDLE) {
               this.setState({ currentAction:SearchAction.IDLE })
@@ -410,22 +480,23 @@ export default class SearchGame extends Component<Props, State> {
             }
           }}
           theme={theme} 
-          lightSymbolLink={gameState === GameState.IDLE ? play : star_gold} 
-          darkSymbolLink={gameState === GameState.IDLE ? play_dark : star_gold} 
-          color={'bg-green-300'}
-          focusColor='hover:bg-green-400'
-          darkColor={'dark:bg-green-400'}
-          darkFocusColor='hover:dark:bg-green-300'
+          lightSymbolLink={gameState === GameState.IDLE || gameState === GameState.COMPLETE ? play : pause} 
+          darkSymbolLink={gameState === GameState.IDLE || gameState === GameState.COMPLETE ? play : pause} 
+          color='bg-green-300'
+          hoverColor='hover:bg-green-400'
+          darkColor='dark:bg-green-400'
+          darkHoverColor='hover:dark:bg-green-300'
           scale='scale-75'
+          isDisabled={ gameState === GameState.COMPLETE }
         />)
         continue;
       }
 
       // reset
-      if (i === 10) {
+      if (i === 8) {
         controls.push(
         <InteractableGridCell 
-          title={<span>RESET</span>}
+          title={<span>Reset</span>}
           onClick={() => {
             if (gameState === GameState.COMPLETE) {
               this.resetCellData(); this.setState({ gameState: GameState.IDLE }) 
@@ -433,17 +504,31 @@ export default class SearchGame extends Component<Props, State> {
           }}
           theme={theme} 
           lightSymbolLink={reset} 
-          darkSymbolLink={reset_dark} 
-          color={'bg-green-300'}
-          focusColor='hover:bg-green-400'
-          darkColor={'dark:bg-green-400'}
-          darkFocusColor='hover:dark:bg-green-300'
+          darkSymbolLink={reset} 
+          color='bg-blue-300'
+          hoverColor='hover:bg-blue-400'
+          darkColor='dark:bg-blue-400'
+          darkHoverColor='hover:dark:bg-blue-300'
           scale='scale-75'
+          isDisabled={ gameState !== GameState.COMPLETE }
         />)
         continue;
       }
 
-      // eraser
+      if (i === 12) {
+        controls.push(
+          <DropDown
+            options={['Breadth First Search', 'Depth First Search', 'A Star', 'Dijkstra`s']}
+            setSortCode={this.setSortCode}
+            isDisabled={ gameState === GameState.IDLE}
+            color='bg-blue-300'
+            hoverColor='hover:bg-blue-400'
+            darkColor='dark:bg-slate-600'
+            darkHoverColor='hover:dark:bg-blue-200'
+          />
+        )
+        continue;
+      }
       
 
       // clear 
@@ -461,11 +546,12 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={bin} 
           darkSymbolLink={bin_dark} 
           color='bg-red-400' 
-          focusColor='hover:bg-red-500'
+          hoverColor='hover:bg-red-500'
           darkColor='dark:bg-red-400'
-          darkFocusColor='hover:dark:bg-red-500'
+          darkHoverColor='hover:dark:bg-red-500'
           scale='scale-75'
           focusHeight='24'
+          isDisabled={ gameState != GameState.IDLE }
         />)
         continue;
       }
@@ -480,7 +566,7 @@ export default class SearchGame extends Component<Props, State> {
         lightSymbolLink={back} 
         darkSymbolLink={back_dark} 
         color='bg-blue-500' 
-        focusColor='hover:bg-blue-600'
+        hoverColor='hover:bg-blue-600'
         scale='scale-75'
       />)
       continue;
@@ -497,6 +583,7 @@ export default class SearchGame extends Component<Props, State> {
         onMouseDown={() => this.setState({mouseDown: true})}
         onMouseUp={() => this.setState({mouseDown: false})}
         onMouseLeave={() => this.setState({mouseDown: false})}
+        
       >
         <div className={`grid gap-2 grid-cols-20 grid-rows-1 w-max`}>
           {controls}

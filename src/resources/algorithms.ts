@@ -6,7 +6,8 @@ enum CellState {
   SOURCE,
   EMPTY,
   WALL,
-  TARGET
+  TARGET,
+  WEIGHT
 } 
 
 interface Node {
@@ -133,7 +134,6 @@ function setNewDistances(grid: Node[], closestNode: Node, neighbourIDs: string [
 export function getShortestPath(final: Node): Node[] {
   const output: Node [] = []
   let currentNode: Node | null = final;
-  console.log(final)
 
   while (currentNode !== null) {
     output.push(currentNode);
@@ -156,7 +156,6 @@ function getValidNeighbours (grid: Node [], gridWidth: number, visted: Node [], 
   let y = currentNode.id.split(',')[1]
 
   let left = getNode(grid, `${Number(x) - 1},${y}`.trim())
-  console.log(left)
   if (left && left.state != CellState.WALL && !visted.includes(left)) {
     output.push(left)
   }
