@@ -1,20 +1,8 @@
-import React from 'react';
-import logo from './logo.svg';
 import { Component } from 'react';
-import { Pages, Links, SearchAction, Colour } from '../../config/enums';
+import { Pages, SearchAction } from '../../config/enums';
 import InteractableGridCell from '../interactableGridCell';
 import GameCell from '../gameCell';
 import DropDown from '../dropdown';
-
-import about from '../.././images/about.png'
-import projects from '../.././images/projects.png'
-import skills from '../.././images/skills.png'
-import github from '../.././images/github.png'
-
-import about_dark from '../.././images/about_dark.png'
-import projects_dark from '../.././images/projects_dark.png'
-import skills_dark from '../.././images/skills_dark.png'
-import github_dark from '../.././images/github_dark.png'
 
 import sun from '../.././images/sun.png'
 import moon from '../.././images/moon.png'
@@ -29,7 +17,6 @@ import star_gold from '../.././images/projects/game_search/star_gold.png'
 import bin from '../.././images/projects/game_search/bin.png' 
 import bin_dark from '../.././images/projects/game_search/bin_dark.png'
 
-import eraser from '../.././images/projects/game_search/eraser.png' 
 import eraser_dark from '../.././images/projects/game_search/eraser_dark.png'
 
 import wall from '../.././images/projects/game_search/wall.png'
@@ -276,8 +263,8 @@ export default class SearchGame extends Component<Props, State> {
     return [];
   }
 
-  animate (code: string): void {
-    const { grid, startNode, goalNode, sortCode } = this.state;
+  animate (): void {
+    const {startNode, goalNode, sortCode } = this.state;
     
     if (startNode === null) {
       alert('add start node')
@@ -335,7 +322,7 @@ export default class SearchGame extends Component<Props, State> {
 
   render () {
     const {navigate, theme, toggleDark} = this.props;
-    const { currentAction, grid, gameState } = this.state;
+    const { currentAction, gameState } = this.state;
     let controls: JSX.Element[] = []
     const redElement: JSX.Element = <div className={`${'bg-blue-300'} ${'hover:bg-blue-400'} ${'dark:bg-slate-600'} ${'hover:dark:bg-blue-200'} w-14 h-14 duration-200 rounded-md`}></div>
 
@@ -375,7 +362,7 @@ export default class SearchGame extends Component<Props, State> {
           darkColor={currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'dark:bg-slate-600'}
           darkHoverColor={'hover:dark:bg-blue-200'}
           scale='scale-75'
-          isDisabled={ gameState != GameState.IDLE }
+          isDisabled={ gameState !== GameState.IDLE }
         />)
         continue;
       }
@@ -399,7 +386,7 @@ export default class SearchGame extends Component<Props, State> {
           darkColor={currentAction === SearchAction.TARGET ? 'bg-red-300' : 'dark:bg-slate-600'}
           darkHoverColor={'hover:dark:bg-blue-200'}
           scale='scale-75'
-          isDisabled={gameState != GameState.IDLE }
+          isDisabled={gameState !== GameState.IDLE }
         />)
         continue;
       }
@@ -428,7 +415,7 @@ export default class SearchGame extends Component<Props, State> {
           darkColor={currentAction === SearchAction.WALL ? 'bg-red-300' : 'dark:bg-slate-600'}
           darkHoverColor={'dark:bg-blue-200'}
           scale='scale-[0.65]'
-          isDisabled={gameState != GameState.IDLE }
+          isDisabled={gameState !== GameState.IDLE }
           secondaryFunction={this.clearCellsOfState}
           cellState={CellState.WALL}
         />)
@@ -453,7 +440,7 @@ export default class SearchGame extends Component<Props, State> {
           darkColor={currentAction === SearchAction.WEIGHT ? 'bg-red-300' : 'dark:bg-slate-600'}
           darkHoverColor={'dark:bg-blue-200'}
           scale='scale-[0.65]'
-          isDisabled={gameState != GameState.IDLE }
+          isDisabled={gameState !== GameState.IDLE }
           secondaryFunction={this.clearCellsOfState}
           cellState={CellState.WEIGHT}
         />)
@@ -478,7 +465,7 @@ export default class SearchGame extends Component<Props, State> {
           darkColor={currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'dark:bg-slate-600'}
           darkHoverColor='hover:dark:bg-red-500'
           scale='scale-75'
-          isDisabled={gameState != GameState.IDLE }
+          isDisabled={gameState !== GameState.IDLE }
         />)
         continue;
       }
@@ -491,7 +478,7 @@ export default class SearchGame extends Component<Props, State> {
           onClick={() => {
             if (gameState === GameState.IDLE) {
               this.setState({ currentAction:SearchAction.IDLE })
-              this.animate('bfs')
+              this.animate()
             }
           }}
           theme={theme} 
@@ -565,7 +552,7 @@ export default class SearchGame extends Component<Props, State> {
           darkHoverColor='hover:dark:bg-red-500'
           scale='scale-75'
           focusHeight='24'
-          isDisabled={ gameState != GameState.IDLE }
+          isDisabled={ gameState !== GameState.IDLE }
         />)
         continue;
       }

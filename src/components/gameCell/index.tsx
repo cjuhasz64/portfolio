@@ -1,10 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
 import { Component } from 'react';
-import { Pages, Links, SearchAction } from '../../config/enums';
+import { SearchAction } from '../../config/enums';
 
 import star_gold from '../.././images/projects/game_search/star_gold.png' 
-import wall from '../.././images/projects/game_search/wall.png' 
 import start from '../.././images/projects/game_search/start.png' 
 import weight from '../.././images/projects/game_search/weight.png' 
 

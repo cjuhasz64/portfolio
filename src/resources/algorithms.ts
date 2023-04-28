@@ -1,7 +1,3 @@
-import { get } from "http";
-
-
-
 enum CellState {
   SOURCE,
   EMPTY,
@@ -179,14 +175,14 @@ export function aStar (grid: Node [], gridWidth: number, startNode: Node, target
       if (openList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
         // remove current neighbour from openList
         openList = openList.filter(item => {
-          if (item.id !== currentNeighbour.id) return item
+          return item.id !== currentNeighbour.id ? true : false 
         })
       }
 
       if (closedList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
         // remove current neighbour from closed list
         closedList = closedList.filter(item => {
-          if (item.id !== currentNeighbour.id) return item
+          return item.id !== currentNeighbour.id ? true : false 
         })
       }
 
@@ -207,7 +203,7 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Nod
   let queue: Node [] = [];
   let visited: Node [] = [];
 
-  grid.map(node => {
+  grid.forEach(node => {
     queue.push(node)
   })
 
@@ -271,10 +267,6 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Nod
     
   //   setNewDistances(grid, closestNode, getValidNeighbours(grid, width, visited, closestNode.id))
   // }
-
-
-
-  return []
 }
 
 function getDistance (node1: Node, node2: Node): number {
@@ -365,31 +357,27 @@ function sortNodesByScore(nodes: Node []) {
 }
 
 function getValidNeighbours (grid: Node [], gridWidth: number, currentNode: Node, visted?: Node []): Node[] {
-
-  const width = gridWidth;
-  const height = grid.length / width;
-
   let output: Node[] = [];
   let x = currentNode.id.split(',')[0]
   let y = currentNode.id.split(',')[1]
 
   let left = getNode(grid, `${Number(x) - 1},${y}`.trim())
-  if (left && left.state != CellState.WALL && !visted!.includes(left)) {
+  if (left && left.state !== CellState.WALL && !visted!.includes(left)) {
     output.push(left)
   }
 
   let up = getNode(grid, `${x},${Number(y) - 1}`.trim())
-  if (up && up.state != CellState.WALL && !visted!.includes(up)) {
+  if (up && up.state !== CellState.WALL && !visted!.includes(up)) {
     output.push(up)
   }
 
   let right = getNode(grid, `${Number(x) + 1},${y}`.trim())
-  if (right && right.state != CellState.WALL && !visted!.includes(right)) {
+  if (right && right.state !== CellState.WALL && !visted!.includes(right)) {
     output.push(right)
   }
   
   let down = getNode(grid, `${x},${Number(y) + 1}`.trim())
-  if (down && down.state != CellState.WALL && !visted!.includes(down)) {
+  if (down && down.state !== CellState.WALL && !visted!.includes(down)) {
     output.push(down)
   }
 
