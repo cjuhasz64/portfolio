@@ -26,7 +26,8 @@ interface Props {
   cellState: CellState,
   isVisited: boolean,
   isShortestPath: boolean,
-  weight: number
+  weight: number,
+  direction: string
 }
 
 interface State {
@@ -61,16 +62,53 @@ export default class GameCell extends Component<Props, State> {
     }
   }
 
+  getShortestPathSVG (direction: string): JSX.Element | null {
+    const { isShortestPath } = this.props;
+    if (!isShortestPath) return null;
+
+    if (direction === 'y'){
+      return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(90)'>
+                <line x1="14" y1="0" x2="14" y2="28" stroke="rgb(168 85 247)" stroke-width="12"/>
+              </svg>
+    } else if (direction === 'x'){
+      return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+                <line x1="14" y1="0" x2="14" y2="28" stroke="rgb(168 85 247)" stroke-width="12"/>
+              </svg> 
+    } else if (direction === 'bl'){
+      return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(180)'>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+              </svg>
+    } else if (direction === 'tl'){
+      return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(270)'>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+              </svg>
+    } else if (direction === 'tr'){
+      return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform=''>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+              </svg>
+    } else if (direction === 'br'){
+      return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(90)'>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+              </svg>
+    }
+    return null;
+  }
+
   render () {
-    const { currentAction, mouseDown, id, cellState, isVisited, isShortestPath } = this.props;
+    const { currentAction, mouseDown, id, cellState, isVisited, isShortestPath, direction } = this.props;
+   
      return (
-      
         <div 
             id={id}
             className={`w-[1.745rem] h-[1.745rem] ${cellState === CellState.WALL ? 'bg-black' : isVisited === true ? isShortestPath ? 'bg-purple-400' : 'bg-red-400' : 'bg-blue-300 dark:bg-slate-600 hover:bg-blue-400 hover:dark:bg-blue-200'} duration-200 rounded-md ${currentAction !== SearchAction.IDLE ? 'cursor-pointer' : ''} select-none`}
             onClick={() => this.setCellState()}
             onMouseOver={() => mouseDown ? this.setCellState() : null}
           >
+            
           {
             cellState === CellState.TARGET ?
             <img src={star_gold} alt="Italian Trulli" className={'scale-50'}/> :
@@ -88,8 +126,11 @@ export default class GameCell extends Component<Props, State> {
             <img src={weight} alt="Italian Trulli" className={'scale-[.6]'}/> :
             null
           }
+          {
+
+          }
+          { this.getShortestPathSVG(direction) }
         </div>
- 
     )
   }
 }

@@ -45,7 +45,7 @@ import reset from '../.././images/projects/game_search/reset.png'
 
 import start from '../.././images/projects/game_search/start.png'
 
-import { bfs, dfs, dijkstra, getShortestPath } from '../../resources/algorithms';
+import { bfs, dfs, dijkstra, aStar, getShortestPath } from '../../resources/algorithms';
 
 enum CellState {
   SOURCE,
@@ -69,7 +69,9 @@ interface Node {
   isShortestPath: boolean
   distance: number,
   previousNode: Node | null,
-  weight: number
+  weight: number,
+  score: number,
+  direction: string
 }
 
 interface Props { 
@@ -106,6 +108,7 @@ export default class SearchGame extends Component<Props, State> {
     }
     this.updateCellState = this.updateCellState.bind(this)
     this.setSortCode = this.setSortCode.bind(this)
+    this.clearCellsOfState = this.clearCellsOfState.bind(this)
   }
 
   componentDidMount(): void {
@@ -127,6 +130,7 @@ export default class SearchGame extends Component<Props, State> {
           isVisited={grid[i].isVisited}
           isShortestPath = {grid[i].isShortestPath}
           weight={grid[i].weight}
+          direction={grid[i].direction}
         />
       )
     }
@@ -167,7 +171,7 @@ export default class SearchGame extends Component<Props, State> {
     this.setState( prev => ({
       grid: prev.grid.map(x => {
         if (x.id === id) {
-          if (state === CellState.WEIGHT) x.weight = 5
+          if (state === CellState.WEIGHT) x.weight = 3
           else if (state === CellState.EMPTY) x.weight = 1
           x.state = state
         } 
@@ -177,31 +181,40 @@ export default class SearchGame extends Component<Props, State> {
   }
 
   setCellVisited (id: string) {
-    const { grid } = this.state;
     this.setState( prev => ({
       grid: prev.grid.map(x => {
         if (x.id === id) {
-          x.isVisited = true
+          x.isVisited = true;
         } 
         return x
       })
     }))
-
   }
 
-  setCellShortestPath (id: string) {
-    const { grid } = this.state;
+  setCellShortestPath (id: string, direction: string) {
     this.setState( prev => ({
       grid: prev.grid.map(x => {
         if (x.id === id) {
-          x.isShortestPath = true
+          x.isShortestPath = true;
+          x.direction = direction;
         } 
         return x
       })
     }))
-
   }
 
+  clearCellsOfState (state: CellState) {
+    this.setState( prev => ({
+      grid: prev.grid.map(x => {
+        if (x.state === state) {
+          if (state === CellState.WEIGHT) x.weight = 1
+          x.state = CellState.EMPTY
+        } 
+        return x
+      })
+    }))
+  }
+  
   clearCellData () {
     let temp: Node [] = []
     for (let row = 0; row < this.HEIGHT; row ++) {
@@ -213,6 +226,7 @@ export default class SearchGame extends Component<Props, State> {
       grid: temp
     })
   }
+
   setSortCode (code: string) {
     this.setState({
       sortCode: code
@@ -226,6 +240,8 @@ export default class SearchGame extends Component<Props, State> {
         x.isVisited = false;
         x.distance = Infinity;
         x.previousNode = null;
+        x.score = Infinity
+        x.direction = ''
         return x
       })
     }))
@@ -239,20 +255,21 @@ export default class SearchGame extends Component<Props, State> {
       isShortestPath: false,
       distance: Infinity,
       previousNode: null,
-      weight: 1
+      weight: 1,
+      score: Infinity,
+      direction: ''
     }
   }
 
-
   getVisted (code: string) {
-    const { grid, startNode } = this.state;
+    const { grid, startNode, goalNode } = this.state;
     switch (code) {
       case 'Breadth First Search':
         return bfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
       case 'Depth First Search':
         return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
       case 'A Star':
-        return dfs(grid, this.WIDTH, this.getNode(grid, startNode!)!);
+        return aStar(grid, this.WIDTH, this.getNode(grid, startNode!)!, this.getNode(grid, goalNode!)!)
       case 'Dijkstra`s':
         return dijkstra(grid, this.WIDTH, this.getNode(grid, startNode!)!);
     }
@@ -272,7 +289,6 @@ export default class SearchGame extends Component<Props, State> {
       return
     }
 
-    // check if sort type is selected
     if (!sortCode) {
       alert('select sort')
       return
@@ -282,11 +298,8 @@ export default class SearchGame extends Component<Props, State> {
       gameState: GameState.RUNNING
     })
 
-    
-    
     const visistedInOrder = this.getVisted(sortCode)
     // get visted order, and display it
-    // const visistedInOrder = bfs(grid, this.WIDTH, this.getNode(grid, startNode)!)
     for (let i = 0; i < visistedInOrder!.length; i++) {
       setTimeout(() => {
         this.setCellVisited(visistedInOrder[i].id)
@@ -294,30 +307,23 @@ export default class SearchGame extends Component<Props, State> {
     }
   
     const shortestPath = getShortestPath(visistedInOrder[visistedInOrder.length - 1])
+
     if (visistedInOrder[visistedInOrder.length - 1].state === CellState.TARGET) {
       // target was reached
       // get shortest path, and display it
-      
       for (let i = 0; i < shortestPath.length; i++) {
         setTimeout(() => {
-          this.setCellShortestPath(shortestPath[i].id)
+          this.setCellShortestPath(shortestPath[i].id, shortestPath[i].direction)
           
         }, (visistedInOrder!.length * 10) + (i * 20))
       }
     } else {
-
+      // nothing yet
     }
-
     //set complete, timeout to trigger after animation
     setTimeout(() => {
       this.setState({ gameState: GameState.COMPLETE })
     }, (visistedInOrder!.length * 10) + (visistedInOrder[visistedInOrder.length - 1].state === CellState.TARGET ? shortestPath!.length * 20 : 0))
-    
-
-  }
-
-  blink () {
-    
   }
 
   getNode (grid: Node [], id: string): Node | null {
@@ -326,7 +332,6 @@ export default class SearchGame extends Component<Props, State> {
     }
     return null;
   }
-  
 
   render () {
     const {navigate, theme, toggleDark} = this.props;
@@ -345,6 +350,8 @@ export default class SearchGame extends Component<Props, State> {
           darkSymbolLink={moon} 
           color='bg-blue-300'
           darkColor='dark:bg-black'
+          hoverColor='bg-blue-400'
+          darkHoverColor='dark:bg-zinc-800'
           scale='scale-75'
           />)
         continue;
@@ -417,11 +424,13 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={wall} 
           darkSymbolLink={wall_dark} 
           color={currentAction === SearchAction.WALL ? 'bg-red-300' : 'bg-blue-300'}
-          hoverColor={'hover:bg-blue-400'}
+          hoverColor={'bg-blue-400'}
           darkColor={currentAction === SearchAction.WALL ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkHoverColor={'hover:dark:bg-blue-200'}
+          darkHoverColor={'dark:bg-blue-200'}
           scale='scale-[0.65]'
           isDisabled={gameState != GameState.IDLE }
+          secondaryFunction={this.clearCellsOfState}
+          cellState={CellState.WALL}
         />)
         continue;
       }
@@ -440,11 +449,13 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={weight} 
           darkSymbolLink={weight} 
           color={currentAction === SearchAction.WEIGHT ? 'bg-red-300' : 'bg-blue-300'}
-          hoverColor={'hover:bg-blue-400'}
+          hoverColor={'bg-blue-400'}
           darkColor={currentAction === SearchAction.WEIGHT ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkHoverColor={'hover:dark:bg-blue-200'}
+          darkHoverColor={'dark:bg-blue-200'}
           scale='scale-[0.65]'
           isDisabled={gameState != GameState.IDLE }
+          secondaryFunction={this.clearCellsOfState}
+          cellState={CellState.WEIGHT}
         />)
         continue;
       }
@@ -524,7 +535,7 @@ export default class SearchGame extends Component<Props, State> {
           <DropDown
             options={['Breadth First Search', 'Depth First Search', 'A Star', 'Dijkstra`s']}
             setSortCode={this.setSortCode}
-            isDisabled={ gameState === GameState.IDLE}
+            isDisabled={ gameState !== GameState.IDLE}
             color='bg-blue-300'
             hoverColor='hover:bg-blue-400'
             darkColor='dark:bg-slate-600'
@@ -534,7 +545,6 @@ export default class SearchGame extends Component<Props, State> {
         continue;
       }
       
-
       // clear 
       if (i === 18) {
         // clear
@@ -574,9 +584,7 @@ export default class SearchGame extends Component<Props, State> {
         scale='scale-75'
       />)
       continue;
-      
       } 
-
       controls.push(
         redElement
       )
@@ -587,7 +595,6 @@ export default class SearchGame extends Component<Props, State> {
         onMouseDown={() => this.setState({mouseDown: true})}
         onMouseUp={() => this.setState({mouseDown: false})}
         onMouseLeave={() => this.setState({mouseDown: false})}
-        
       >
         <div className={`grid gap-2 grid-cols-20 grid-rows-1 w-max`}>
           {controls}

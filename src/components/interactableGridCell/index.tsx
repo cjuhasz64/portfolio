@@ -2,6 +2,14 @@ import React from 'react';
 import logo from './logo.svg';
 import { Component } from 'react';
 
+enum CellState {
+  SOURCE,
+  EMPTY,
+  WALL,
+  TARGET,
+  WEIGHT
+}
+
 interface Props { 
   theme?: string,
   lightSymbolLink: string,
@@ -14,7 +22,9 @@ interface Props {
   hoverColor?: string,
   darkHoverColor?: string,
   onClick?: () => void
-  isDisabled?: boolean
+  isDisabled?: boolean,
+  secondaryFunction?: (args1: CellState) => void,
+  cellState?: CellState
 }
 
 interface State {
@@ -48,7 +58,7 @@ export default class InteractableGridCell extends Component<Props, State> {
   }
 
   render () {
-    const { darkSymbolLink, lightSymbolLink, title, scale, focusHeight, theme, onClick, isDisabled} = this.props;
+    const { darkSymbolLink, lightSymbolLink, title, scale, focusHeight, theme, onClick, isDisabled, secondaryFunction, cellState} = this.props;
 
     const {
       color,
@@ -60,19 +70,23 @@ export default class InteractableGridCell extends Component<Props, State> {
     const { focus } = this.state;
 
     return (
-      <div className="relative">
+      <div className="relative"
+        onMouseEnter={() => this.setIsFocus(true)}
+        onMouseLeave={() => this.setIsFocus(false)}
+      >
+        {
+          secondaryFunction && !isDisabled ? 
+          <div className={`bg-red-400 hover:bg-red-500 w-14 h-14 rounded-md ${focus ? '-translate-y-6' : ''} text-center duration-200 absolute cursor-pointer`}><span className='text-xs font-bold text-red-600 hover:text-red-400' onClick={() => secondaryFunction(cellState!)}>CLEAR</span></div> :
+          null
+        }
+      
         <div 
           onClick={onClick} 
-          className={`${color} ${darkColor} ${hoverColor} ${darkHoverColor} w-14 h-14 ${title && !isDisabled ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
-          onMouseEnter={() => this.setIsFocus(true)}
-          onMouseLeave={() => this.setIsFocus(false)}
+          className={`${focus ? hoverColor + ' ' + darkHoverColor : color + ' ' +  darkColor} w-14 ${focus ? title && !isDisabled ? focusHeight ? 'h-24' : 'h-20' : null : 'h-14'} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
           >
             <img src={ theme === 'dark' ? darkSymbolLink : lightSymbolLink} alt="Italian Trulli" className={`${scale ? scale : 'scale-90'} fill-red-400 ${ isDisabled ? 'opacity-25' : ''}`} />
             <p className='text-xs font-semibold text-white dark:text-slate-800'>{ focus && !isDisabled ? title : ''}</p>
         </div>
-        {/* <div 
-          className={`animate-bounce ${color} ${darkColor} ${focusColor} ${darkFocusColor} w-14 h-14 ${title ? focusHeight ? 'hover:h-24' : 'hover:h-20' : null} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
-          ></div> */}
       </div>
     )
   }

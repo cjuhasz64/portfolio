@@ -71,7 +71,7 @@ export default class DropDown extends Component<Props, State> {
 
     const drawOptions = options.map((option, i) => {
       return  <div className={`py-3 duration-200 ${i + 1 === options.length ? 'rounded-b-md' : ''} ${newOptionHoverDark} ${newOptionHoverLight} ${newDarkColor} ${newLightColor}`} onClick={() => {this.setState({ selectedOption: option }); setSortCode(option)}}>
-                <span className='text-xs font-semibold text-white dark:text-slate-800'>{ option }</span>
+                <span className='text-xs font-semibold text-white dark:text-slate-800'>{ option === 'A Star' ? 'A Star (Unweighted)' : option }</span>
               </div>
     })
    
@@ -82,9 +82,9 @@ export default class DropDown extends Component<Props, State> {
       <div className="relative" ref={this.wrapperRef}>
         <div 
           className={`duration-200 select-none w-[11.5rem] h-14 absolute cursor-pointer text-center ${focus ? 'rounded-t-md' : 'rounded-md'} ${!focus ? darkColor + ' ' + color : darkFocusColor + ' ' + lightFocusColor} ${hoverColor} ${darkHoverColor}`}
-          onClick={isDisabled ? focus ? () => this.setIsFocus(false) : () => this.setIsFocus(true) : () => {}}
+          onClick={!isDisabled ? focus ? () => this.setIsFocus(false) : () => this.setIsFocus(true) : () => {}}
         >
-            <div className={`h-14 text-md font-semibold dark:hover:text-slate-800 ${focus ? 'dark:text-slate-800 text-white' : 'text-white'} pt-4`} >{ selectedOption === '' ? 'Select an Algorithm!' : selectedOption}</div>
+            <div className={`h-14 text-md font-semibold dark:hover:text-slate-800 ${focus ? 'dark:text-slate-800 text-white' : 'text-white'} pt-4 ${isDisabled ? 'opacity-25' : ''}`} >{ selectedOption === '' ? 'Select an Algorithm!' : selectedOption === 'A Star' ? 'A Star (Unweighted)' : selectedOption}</div>
             {focus ? 
               <div className={`w-[11.5rem] absolute rounded-b-md cursor-pointer text-center divide-y dark:bg-slate-600 duration-200 z-10`}>
                 { drawOptions }

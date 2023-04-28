@@ -16,7 +16,9 @@ interface Node {
   isVisited: boolean,
   distance: number,
   previousNode: Node | null,
-  weight: number
+  weight: number,
+  score: number,
+  direction: string
 }
 
 function getNode (grid: Node [], id: string): Node | null {
@@ -25,7 +27,6 @@ function getNode (grid: Node [], id: string): Node | null {
   }
   return null;
 }
-
 
 export function bfs (grid: Node [], gridWidth: number, startNode: Node): Node [] {
   const width = gridWidth;
@@ -68,29 +69,137 @@ export function dfs (grid: Node [], gridWidth: number, startNode: Node): Node []
   visited.push(startNode);
 
   while (stack.length > 0) {
-    let currentNodeID = stack.pop();
+    let currentNode = stack.pop();
 
-    let neighbours = getValidNeighbours(grid, width, currentNodeID!, visited)
+    let neighbours = getValidNeighbours(grid, width, currentNode!, visited)
 
     for (let i = 0; i < neighbours.length; i++) {
       let currentNeighbour = neighbours[i]
-      currentNeighbour!.previousNode = currentNodeID!
+      currentNeighbour!.previousNode = currentNode!
       stack.push(currentNeighbour);
     }
 
-    visited.push(currentNodeID!);
+    visited.push(currentNode!);
 
-    if (currentNodeID!.state === CellState.TARGET) {
+    if (currentNode!.state === CellState.TARGET) {
       return visited;
     }
   }
   return visited
 }  
 
-export function aStar (grid: Node [], gridWidth: number, startNode: string): Node [] {
-  return []
-}
+// export function aStar (grid: Node [], gridWidth: number, startNode: Node, targetNode: Node): Node [] {
+//   const width = gridWidth;
 
+//   let visited: Node [] = [];
+
+//   visited.push(startNode);
+
+//   let openList: Node [] = [];
+//   let closedList: Node [] = [];
+
+//   openList.push(startNode)
+//   startNode.score = 0 + getDistance(startNode, targetNode)
+//   startNode.distance = 0
+
+//   while (openList.length > 0) {
+//     sortNodesByScore(openList);
+//     let currentNode = openList.shift();
+//     visited.push(currentNode!)
+
+//     if (currentNode!.state === CellState.TARGET) {
+//       return visited;
+//     }
+
+//     closedList.push(currentNode!)
+
+//     let neighbours = getValidNeighbours(grid, width, currentNode!, closedList)
+
+//     for (let i = 0; i < neighbours.length; i++) {
+//       let currentNeighbour = neighbours[i]
+//       let cost = currentNode!.distance + getDistance(currentNode!, currentNeighbour);
+
+//       if (openList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
+//         // remove current neighbour from openList
+//         openList = openList.filter(item => {
+//           if (item.id !== currentNeighbour.id) return item
+//         })
+//       }
+
+//       if (closedList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
+//         // remove current neighbour from closed list
+//         closedList = closedList.filter(item => {
+//           if (item.id !== currentNeighbour.id) return item
+//         })
+//       }
+
+//       if (!openList.includes(currentNeighbour) && !closedList.includes(currentNeighbour)) {
+//         console.log(currentNeighbour.weight)
+//         currentNeighbour.distance = currentNode!.distance + currentNeighbour.weight
+//         currentNeighbour!.previousNode = currentNode!
+//         currentNeighbour.score = currentNeighbour.distance + getDistance(currentNeighbour, targetNode);
+//         openList.push(currentNeighbour);
+//       }
+//     }
+//   }
+  
+//   return visited
+// }
+
+export function aStar (grid: Node [], gridWidth: number, startNode: Node, targetNode: Node): Node [] {
+  const width = gridWidth;
+
+  let visited: Node [] = [];
+
+  visited.push(startNode);
+
+  let openList: Node [] = [];
+  let closedList: Node [] = [];
+
+  openList.push(startNode)
+  startNode.score = 0 + getDistance(startNode, targetNode)
+
+  while (openList.length > 0) {
+    sortNodesByScore(openList);
+    let currentNode = openList.shift();
+    visited.push(currentNode!)
+
+    if (currentNode!.state === CellState.TARGET) {
+      return visited;
+    }
+
+    closedList.push(currentNode!)
+
+    let neighbours = getValidNeighbours(grid, width, currentNode!, closedList)
+
+    for (let i = 0; i < neighbours.length; i++) {
+      let currentNeighbour = neighbours[i]
+      let cost = getDistance(startNode, currentNode!) + getDistance(currentNode!, currentNeighbour);
+
+      if (openList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
+        // remove current neighbour from openList
+        openList = openList.filter(item => {
+          if (item.id !== currentNeighbour.id) return item
+        })
+      }
+
+      if (closedList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
+        // remove current neighbour from closed list
+        closedList = closedList.filter(item => {
+          if (item.id !== currentNeighbour.id) return item
+        })
+      }
+
+      if (!openList.includes(currentNeighbour) && !closedList.includes(currentNeighbour)) {
+        currentNeighbour!.previousNode = currentNode!
+        currentNeighbour.score = getDistance(startNode, currentNeighbour) + getDistance(currentNeighbour, targetNode);
+        openList.push(currentNeighbour);
+      }
+    }
+  }
+  
+  return visited
+}
 
 export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Node [] {
   const width = gridWidth;
@@ -110,6 +219,7 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Nod
     sortNodesByDistance(queue);
 
     let currentNode = queue.shift();
+    visited.push(currentNode!)
 
     let neighbours = getValidNeighbours(queue, width, currentNode!, visited)
 
@@ -127,11 +237,8 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Nod
       if (currentNode!.state === CellState.TARGET) {
         return visited;
       }
-
     }
-    visited.push(currentNode!)
   }
-    
   return visited
 
 
@@ -170,26 +277,91 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Nod
   return []
 }
 
-function setNewDistances(grid: Node[], closestNode: Node, neighbourIDs: string []) {
-  neighbourIDs.forEach(id => {
-    getNode(grid, id)!.previousNode = closestNode
-    getNode(grid, id)!.distance = closestNode.distance + 1
-  });
+function getDistance (node1: Node, node2: Node): number {
+  const node1X = parseInt(node1.id.split(',')[0]);
+  const node1Y = parseInt(node1.id.split(',')[1]);
+  const node2X = parseInt(node2.id.split(',')[0]);
+  const node2Y = parseInt(node2.id.split(',')[1]);
+
+  const diffX = Math.abs(node2X - node1X);
+  const diffY = Math.abs(node2Y - node1Y);
+  
+  return Math.sqrt(diffX ** 2 + diffY ** 2);
 }
 
 export function getShortestPath(final: Node): Node[] {
-  const output: Node [] = []
+  let path: Node [] = []
   let currentNode: Node | null = final;
 
   while (currentNode !== null) {
-    output.push(currentNode);
+    let temp = currentNode;
+    path.push(temp);
     currentNode = currentNode.previousNode
   }
-  return output
+
+  for (let i = 0; i < path.length; i++) {
+    
+    if (path[i].state !== CellState.TARGET && path[i].state !== CellState.SOURCE) {
+      let previousX = parseInt(path[i-1].id.split(',')[0].trim());
+      let previousY = parseInt(path[i-1].id.split(',')[1].trim());
+      let currentX = parseInt(path[i].id.split(',')[0].trim());
+      let currentY = parseInt(path[i].id.split(',')[1].trim());
+      let nextX = parseInt(path[i+1].id.split(',')[0].trim());
+      let nextY = parseInt(path[i+1].id.split(',')[1].trim());
+
+      if (currentX === previousX && currentX === nextX) {
+        path[i].direction = 'x'
+      } else if (currentY === previousY && currentY === nextY) {
+        path[i].direction = 'y'
+
+
+      } else if ((currentX < previousX && currentX === nextX) && (currentY === previousY && currentY < nextY)) {      
+        // right to bottom
+        path[i].direction = 'br'
+      } else if ((currentX === previousX && currentX < nextX) && (currentY < previousY && currentY === nextY)) {      
+        // bottom to right
+        path[i].direction = 'br'
+
+      
+      } else if ((currentX > previousX && currentX === nextX) && (currentY === previousY && currentY < nextY)) {
+        // left to bottom
+        path[i].direction = 'bl'
+      
+
+      } else if ((currentX === previousX && currentX > nextX) && (currentY < previousY && currentY === nextY)) {
+        // bottom to left
+        path[i].direction = 'bl'
+      }
+
+      else if ((currentX > previousX && currentX === nextX) && (currentY === previousY && currentY > nextY)) {
+        // left to top
+        path[i].direction = 'tl'
+      } 
+      else if ((currentX === previousX && currentX > nextX) && (currentY > previousY && currentY === nextY)) {
+        // top to left
+        path[i].direction = 'tl'
+      }
+
+      else if ((currentX < previousX && currentX === nextX) && (currentY === previousY && currentY > nextY)) {
+        // right to top
+        path[i].direction = 'tr'
+      }
+
+      else if ((currentX === previousX && currentX < nextX) && (currentY > previousY && currentY === nextY)) {
+        // top to right
+        path[i].direction = 'tr'
+      }
+    }
+  }
+  return path
 }
 
 function sortNodesByDistance(nodes: Node []) {
   nodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+}
+
+function sortNodesByScore(nodes: Node []) {
+  nodes.sort((nodeA, nodeB) => nodeA.score - nodeB.score);
 }
 
 function getValidNeighbours (grid: Node [], gridWidth: number, currentNode: Node, visted?: Node []): Node[] {
@@ -263,14 +435,5 @@ function getValidNeighbours (grid: Node [], gridWidth: number, currentNode: Node
 //       queue.push(currentNeighbour);
 //       visited.push(currentNeighbour);
 //     }
-
 //   }
-  
-
 // }
-
-// //processing all the neighbours of v  
-// for all neighbours w of v in Graph G
-// if w is not visited 
-//          Q.enqueue( w )             //Stores w in Q to further visit its neighbour
-//          mark w as visited.
