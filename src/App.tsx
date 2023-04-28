@@ -1,28 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
 import { Component } from 'react';
-import { JsxElement } from 'typescript';
-
-import about from './images/about.png'
-import projects from './images/projects.png'
-import skills from './images/skills.png'
-import github from './images/github.png'
-
-import about_dark from './images/about_dark.png'
-import projects_dark from './images/projects_dark.png'
-import skills_dark from './images/skills_dark.png'
-import github_dark from './images/github_dark.png'
-
-import sun from './images/sun.png'
-import moon from './images/moon.png'
-
-import back from './images/back.png'
-import back_dark from './images/back_dark.png'
 
 import profile from './images/profile.jpg'
 
-
-import InteractableGridCell from './components/interactableGridCell';
 import Grid from './components/grid';
 import SearchGame from './components/seachGame';
 
@@ -49,7 +28,7 @@ export default class App extends Component<Props, State> {
       posX: 0,
       posY: 0,
       fullBackground: window.innerWidth < 768 ? false : true,
-      currentPage: Pages.SEARCHING
+      currentPage: Pages.HOME
     };
     this.toggleDarkMode = this.toggleDarkMode.bind(this)
     this.setBackgroundSize = this.setBackgroundSize.bind(this)
@@ -106,7 +85,7 @@ export default class App extends Component<Props, State> {
   }
 
   render () {
-    const {posX, posY, currentPage, fullBackground, theme} = this.state
+    const {currentPage, fullBackground, theme} = this.state
     return (
       <>
       <div className="grid h-screen place-items-center dark:bg-slate-800 relative overflow-hidden">

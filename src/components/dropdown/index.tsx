@@ -1,7 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import { Component } from 'react';
-import { Colour } from '../../config/enums';
+
 
 interface Props { 
   options: string [],

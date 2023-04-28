@@ -5,8 +5,6 @@ import star_gold from '../.././images/projects/game_search/star_gold.png'
 import start from '../.././images/projects/game_search/start.png' 
 import weight from '../.././images/projects/game_search/weight.png' 
 
-
-
 enum CellState {
   SOURCE,
   EMPTY,
@@ -30,7 +28,6 @@ interface Props {
 interface State {
   focus: boolean
 }
-
 
 export default class GameCell extends Component<Props, State> {
 
@@ -122,9 +119,6 @@ export default class GameCell extends Component<Props, State> {
             cellState === CellState.WEIGHT ?
             <img src={weight} alt="Italian Trulli" className={'scale-[.6]'}/> :
             null
-          }
-          {
-
           }
           { this.getShortestPathSVG(direction) }
         </div>
