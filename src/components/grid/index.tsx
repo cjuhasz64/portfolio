@@ -1,9 +1,6 @@
-import React from 'react';
-import logo from './logo.svg';
 import { Component } from 'react';
 import { Pages, Links } from '../../config/enums';
 import InteractableGridCell from '../interactableGridCell';
-import GameCell from '../gameCell';
 
 import about from '../.././images/about.png'
 import projects from '../.././images/projects.png'
@@ -24,10 +21,6 @@ import back_dark from '../.././images/back_dark.png'
 import search from '../.././images/projects/search.png'
 import search_dark from '../.././images/projects/search_dark.png'
 
-// search game
-import star_gold from '../.././images/projects/game_search/star_gold.png'
-
-import SearchGame from '../seachGame';
 
 interface Props { 
   currentPage: Pages,
@@ -47,11 +40,9 @@ interface State {
 
 export default class Grid extends Component<Props, State> {
 
-  constructor(props: Props) {
-    super(props);
-
-
-  }
+  // constructor(props: Props) {
+  //   super(props);
+  // }
 
   componentDidMount(): void {
   }
@@ -72,11 +63,11 @@ export default class Grid extends Component<Props, State> {
     const thirdLayerChance = 70;
 
     const redElement: JSX.Element = <div className="bg-blue-300 dark:bg-slate-600 w-14 h-14 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 rounded-md"></div>
-    const testElement: JSX.Element = <div className="bg-red-600 duration-200 rounded-md"></div>
+    // const testElement: JSX.Element = <div className="bg-red-600 duration-200 rounded-md"></div>
     const clearElement: JSX.Element = <div className="w-14 h-14"></div>
 
     let output: JSX.Element[] = [];
-    let gameGrid: JSX.Element[] = []
+
     for (let i = 1; i <= height * width; i++) {
       switch (currentPage) {
         case Pages.HOME:
@@ -154,7 +145,7 @@ export default class Grid extends Component<Props, State> {
           }
           
           if (fullBackground) {
-            if (i > 77 && i < 83 || i > 65 && i < 71) {
+            if ((i > 77 && i < 83) || (i > 65 && i < 71)) {
               output.push(clearElement)
               continue;
             }
@@ -194,9 +185,9 @@ export default class Grid extends Component<Props, State> {
           }
 
           if (
-            i > 41 && i < 46 ||
-            i > 51 && i < 58 ||
-            i > 63 && i < 70
+            (i > 41 && i < 46) ||
+            (i > 51 && i < 58) ||
+            (i > 63 && i < 70)
             ) {
             output.push(clearElement)
             continue;
