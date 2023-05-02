@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Pages, SearchAction } from '../../config/enums';
+import { Pages, SearchAction, CellState } from '../../config/enums';
 import InteractableGridCell from '../interactableGridCell';
 import GameCell from '../gameCell';
 import DropDown from '../dropdown';
@@ -9,7 +9,6 @@ import moon from '../.././images/moon.png'
 
 import back from '../.././images/back.png'
 import back_dark from '../.././images/back_dark.png'
-
 
 // search game
 import star_gold from '../.././images/projects/game_search/star_gold.png' 
@@ -26,21 +25,11 @@ import weight from '../.././images/projects/game_search/weight.png'
 
 import play from '../.././images/projects/game_search/play.png'
 
-import pause from '../.././images/projects/game_search/pause.png'
-
 import reset from '../.././images/projects/game_search/reset.png'
 
 import start from '../.././images/projects/game_search/start.png'
 
 import { bfs, dfs, dijkstra, aStar, getShortestPath } from '../../resources/algorithms';
-
-enum CellState {
-  SOURCE,
-  EMPTY,
-  WALL,
-  TARGET,
-  WEIGHT
-}
 
 enum GameState {
   RUNNING,
@@ -80,7 +69,7 @@ interface State {
 
 export default class SearchGame extends Component<Props, State> {
   WIDTH = 40;
-  HEIGHT = 20
+  HEIGHT = 20;
   
   constructor(props: Props) {
     super(props);
@@ -143,13 +132,13 @@ export default class SearchGame extends Component<Props, State> {
     }
 
     // handle single end pos
-    if (state === CellState.EMPTY && id === startNode) {
+    if (state !== CellState.SOURCE && id === startNode) {
       this.setState({
         startNode: null
       })
     }
 
-    if (state === CellState.EMPTY && id === goalNode) {
+    if (state !== CellState.TARGET && id === goalNode) {
       this.setState({
         goalNode: null
       })
@@ -210,7 +199,9 @@ export default class SearchGame extends Component<Props, State> {
       }
     }
     this.setState({
-      grid: temp
+      grid: temp,
+      goalNode: null,
+      startNode: null
     })
   }
 
@@ -290,27 +281,31 @@ export default class SearchGame extends Component<Props, State> {
     for (let i = 0; i < visistedInOrder!.length; i++) {
       setTimeout(() => {
         this.setCellVisited(visistedInOrder[i].id)
-      }, i * 10)
+      }, i * 15)
     }
-  
-    const shortestPath = getShortestPath(visistedInOrder[visistedInOrder.length - 1])
-
+    
     if (visistedInOrder[visistedInOrder.length - 1].state === CellState.TARGET) {
+      const shortestPath = getShortestPath(visistedInOrder[visistedInOrder.length - 1])
       // target was reached
       // get shortest path, and display it
       for (let i = 0; i < shortestPath.length; i++) {
         setTimeout(() => {
           this.setCellShortestPath(shortestPath[i].id, shortestPath[i].direction)
           
-        }, (visistedInOrder!.length * 10) + (i * 20))
+        }, (visistedInOrder!.length * 15) + (i * 20))
       }
+
+      //set complete, timeout to trigger after animation
+      setTimeout(() => {
+        this.setState({ gameState: GameState.COMPLETE })
+      }, (visistedInOrder!.length * 15) + (visistedInOrder[visistedInOrder.length - 1].state === CellState.TARGET ? shortestPath!.length * 20 : 0))
     } else {
-      // nothing yet
+      //set complete, timeout to trigger after animation
+      setTimeout(() => {
+        this.setState({ gameState: GameState.COMPLETE })
+      }, (visistedInOrder!.length * 15))
     }
-    //set complete, timeout to trigger after animation
-    setTimeout(() => {
-      this.setState({ gameState: GameState.COMPLETE })
-    }, (visistedInOrder!.length * 10) + (visistedInOrder[visistedInOrder.length - 1].state === CellState.TARGET ? shortestPath!.length * 20 : 0))
+
   }
 
   getNode (grid: Node [], id: string): Node | null {
@@ -344,7 +339,7 @@ export default class SearchGame extends Component<Props, State> {
         continue;
       }
 
-      // start 
+      // source 
       if (i === 1) {
         controls.push(
         <InteractableGridCell 
@@ -358,9 +353,9 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={start} 
           darkSymbolLink={start} 
           color={currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'bg-blue-300'}
-          hoverColor={'hover:bg-blue-400'}
+          hoverColor={'bg-blue-400'}
           darkColor={currentAction === SearchAction.SOURCE ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkHoverColor={'hover:dark:bg-blue-200'}
+          darkHoverColor={'dark:bg-blue-200'}
           scale='scale-75'
           isDisabled={ gameState !== GameState.IDLE }
         />)
@@ -382,9 +377,9 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={star_gold} 
           darkSymbolLink={star_gold} 
           color={currentAction === SearchAction.TARGET ? 'bg-red-300' : 'bg-blue-300'}
-          hoverColor={'hover:bg-blue-400'}
+          hoverColor={'bg-blue-400'}
           darkColor={currentAction === SearchAction.TARGET ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkHoverColor={'hover:dark:bg-blue-200'}
+          darkHoverColor={'dark:bg-blue-200'}
           scale='scale-75'
           isDisabled={gameState !== GameState.IDLE }
         />)
@@ -461,9 +456,9 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={eraser_dark} 
           darkSymbolLink={eraser_dark} 
           color={currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'bg-blue-300'}
-          hoverColor='hover:bg-red-500'
+          hoverColor='bg-red-500'
           darkColor={currentAction === SearchAction.CLEAR ? 'bg-red-300' : 'dark:bg-slate-600'}
-          darkHoverColor='hover:dark:bg-red-500'
+          darkHoverColor='dark:bg-red-500'
           scale='scale-75'
           isDisabled={gameState !== GameState.IDLE }
         />)
@@ -482,14 +477,14 @@ export default class SearchGame extends Component<Props, State> {
             }
           }}
           theme={theme} 
-          lightSymbolLink={gameState === GameState.IDLE || gameState === GameState.COMPLETE ? play : pause} 
-          darkSymbolLink={gameState === GameState.IDLE || gameState === GameState.COMPLETE ? play : pause} 
+          lightSymbolLink={play} 
+          darkSymbolLink={play} 
           color='bg-green-300'
-          hoverColor='hover:bg-green-400'
+          hoverColor='bg-green-400'
           darkColor='dark:bg-green-400'
-          darkHoverColor='hover:dark:bg-green-300'
+          darkHoverColor='dark:bg-green-300'
           scale='scale-75'
-          isDisabled={ gameState === GameState.COMPLETE }
+          isDisabled={ gameState !== GameState.IDLE }
         />)
         continue;
       }
@@ -508,11 +503,12 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={reset} 
           darkSymbolLink={reset} 
           color='bg-blue-300'
-          hoverColor='hover:bg-blue-400'
+          hoverColor='bg-blue-400'
           darkColor='dark:bg-blue-400'
-          darkHoverColor='hover:dark:bg-blue-300'
+          darkHoverColor='dark:bg-blue-300'
           scale='scale-75'
           isDisabled={ gameState !== GameState.COMPLETE }
+          getAttention={gameState === GameState.COMPLETE}
         />)
         continue;
       }
@@ -524,9 +520,9 @@ export default class SearchGame extends Component<Props, State> {
             setSortCode={this.setSortCode}
             isDisabled={ gameState !== GameState.IDLE}
             color='bg-blue-300'
-            hoverColor='hover:bg-blue-400'
+            hoverColor='bg-blue-400'
             darkColor='dark:bg-slate-600'
-            darkHoverColor='hover:dark:bg-blue-200'
+            darkHoverColor='dark:bg-blue-200'
           />
         )
         continue;
@@ -547,11 +543,11 @@ export default class SearchGame extends Component<Props, State> {
           lightSymbolLink={bin} 
           darkSymbolLink={bin_dark} 
           color='bg-red-400' 
-          hoverColor='hover:bg-red-500'
+          hoverColor='bg-red-500'
           darkColor='dark:bg-red-400'
-          darkHoverColor='hover:dark:bg-red-500'
+          darkHoverColor='dark:bg-red-500'
           scale='scale-75'
-          focusHeight='24'
+          customTranslate='translate-y-10'
           isDisabled={ gameState !== GameState.IDLE }
         />)
         continue;
@@ -567,7 +563,7 @@ export default class SearchGame extends Component<Props, State> {
         lightSymbolLink={back} 
         darkSymbolLink={back_dark} 
         color='bg-blue-500' 
-        hoverColor='hover:bg-blue-600'
+        hoverColor='bg-blue-600'
         scale='scale-75'
       />)
       continue;

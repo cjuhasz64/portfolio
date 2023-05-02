@@ -84,64 +84,6 @@ export function dfs (grid: Node [], gridWidth: number, startNode: Node): Node []
   return visited
 }  
 
-// export function aStar (grid: Node [], gridWidth: number, startNode: Node, targetNode: Node): Node [] {
-//   const width = gridWidth;
-
-//   let visited: Node [] = [];
-
-//   visited.push(startNode);
-
-//   let openList: Node [] = [];
-//   let closedList: Node [] = [];
-
-//   openList.push(startNode)
-//   startNode.score = 0 + getDistance(startNode, targetNode)
-//   startNode.distance = 0
-
-//   while (openList.length > 0) {
-//     sortNodesByScore(openList);
-//     let currentNode = openList.shift();
-//     visited.push(currentNode!)
-
-//     if (currentNode!.state === CellState.TARGET) {
-//       return visited;
-//     }
-
-//     closedList.push(currentNode!)
-
-//     let neighbours = getValidNeighbours(grid, width, currentNode!, closedList)
-
-//     for (let i = 0; i < neighbours.length; i++) {
-//       let currentNeighbour = neighbours[i]
-//       let cost = currentNode!.distance + getDistance(currentNode!, currentNeighbour);
-
-//       if (openList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
-//         // remove current neighbour from openList
-//         openList = openList.filter(item => {
-//           if (item.id !== currentNeighbour.id) return item
-//         })
-//       }
-
-//       if (closedList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
-//         // remove current neighbour from closed list
-//         closedList = closedList.filter(item => {
-//           if (item.id !== currentNeighbour.id) return item
-//         })
-//       }
-
-//       if (!openList.includes(currentNeighbour) && !closedList.includes(currentNeighbour)) {
-//         console.log(currentNeighbour.weight)
-//         currentNeighbour.distance = currentNode!.distance + currentNeighbour.weight
-//         currentNeighbour!.previousNode = currentNode!
-//         currentNeighbour.score = currentNeighbour.distance + getDistance(currentNeighbour, targetNode);
-//         openList.push(currentNeighbour);
-//       }
-//     }
-//   }
-  
-//   return visited
-// }
-
 export function aStar (grid: Node [], gridWidth: number, startNode: Node, targetNode: Node): Node [] {
   const width = gridWidth;
 
@@ -154,6 +96,7 @@ export function aStar (grid: Node [], gridWidth: number, startNode: Node, target
 
   openList.push(startNode)
   startNode.score = 0 + getDistance(startNode, targetNode)
+  console.log(startNode.score)
 
   while (openList.length > 0) {
     sortNodesByScore(openList);
@@ -180,6 +123,7 @@ export function aStar (grid: Node [], gridWidth: number, startNode: Node, target
       }
 
       if (closedList.includes(currentNeighbour) && cost < getDistance(startNode, currentNeighbour)) {
+        console.log(currentNeighbour.id)
         // remove current neighbour from closed list
         closedList = closedList.filter(item => {
           return item.id !== currentNeighbour.id ? true : false 
@@ -193,9 +137,63 @@ export function aStar (grid: Node [], gridWidth: number, startNode: Node, target
       }
     }
   }
-  
   return visited
 }
+
+
+// export function aStar (grid: Node [], gridWidth: number, startNode: Node, targetNode: Node): Node [] {
+//   const width = gridWidth;
+
+//   let visited: Node [] = [];
+
+//   let openList: Node [] = [];
+//   let closedList: Node [] = [];
+
+//   openList.push(startNode)
+
+//   startNode.distance = 0;
+
+//   startNode.score = startNode.distance + getDistance(startNode, targetNode)
+
+//   while (openList.length > 0) {
+//     sortNodesByScore(openList);
+//     let currentNode = openList.shift();
+//     visited.push(currentNode!)
+
+//     if (currentNode!.state === CellState.TARGET) {
+//       console.log(visited)
+//       return visited; /// !!!!!!
+//     }
+
+//     let neighbours = getValidNeighbours(grid, width, currentNode!, [])
+
+//     for (let i = 0; i < neighbours.length; i++) {
+//       let currentNeighbour = neighbours[i]
+
+//       let neighbour_current_cost = currentNode!.distance + getDistance(currentNode!, currentNeighbour)
+
+//       if (openList.includes(currentNeighbour) && getDistance(startNode, currentNeighbour) <= neighbour_current_cost) {
+//         continue;
+//       } else if (closedList.includes(currentNeighbour) && getDistance(startNode, currentNeighbour) <= neighbour_current_cost) {
+//         openList.push(currentNeighbour);
+//         closedList = closedList.filter(item => {
+//           return item.id !== currentNeighbour.id ? true : false 
+//         })
+//       } else {
+//         openList.push(currentNeighbour);
+//       }
+//       currentNeighbour.distance = neighbour_current_cost
+//       currentNeighbour.previousNode = currentNode!
+//       currentNeighbour.score = neighbour_current_cost + getDistance(currentNeighbour, targetNode)
+//     }
+  
+//     closedList.push(currentNode!)
+
+   
+//   }
+  
+//   return visited
+// }
 
 export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Node [] {
   const width = gridWidth;
@@ -236,9 +234,7 @@ export function dijkstra(grid: Node [], gridWidth: number, startNode: Node): Nod
     }
   }
   return visited
-
-
-
+  
   // const width = gridWidth;
 
   // let visited: Node [] = []
@@ -277,7 +273,7 @@ function getDistance (node1: Node, node2: Node): number {
 
   const diffX = Math.abs(node2X - node1X);
   const diffY = Math.abs(node2Y - node1Y);
-  
+  // return diffX + diffY
   return Math.sqrt(diffX ** 2 + diffY ** 2);
 }
 
@@ -305,41 +301,28 @@ export function getShortestPath(final: Node): Node[] {
         path[i].direction = 'x'
       } else if (currentY === previousY && currentY === nextY) {
         path[i].direction = 'y'
-
-
       } else if ((currentX < previousX && currentX === nextX) && (currentY === previousY && currentY < nextY)) {      
         // right to bottom
         path[i].direction = 'br'
       } else if ((currentX === previousX && currentX < nextX) && (currentY < previousY && currentY === nextY)) {      
         // bottom to right
         path[i].direction = 'br'
-
-      
       } else if ((currentX > previousX && currentX === nextX) && (currentY === previousY && currentY < nextY)) {
         // left to bottom
         path[i].direction = 'bl'
-      
-
       } else if ((currentX === previousX && currentX > nextX) && (currentY < previousY && currentY === nextY)) {
         // bottom to left
         path[i].direction = 'bl'
-      }
-
-      else if ((currentX > previousX && currentX === nextX) && (currentY === previousY && currentY > nextY)) {
+      } else if ((currentX > previousX && currentX === nextX) && (currentY === previousY && currentY > nextY)) {
         // left to top
         path[i].direction = 'tl'
-      } 
-      else if ((currentX === previousX && currentX > nextX) && (currentY > previousY && currentY === nextY)) {
+      } else if ((currentX === previousX && currentX > nextX) && (currentY > previousY && currentY === nextY)) {
         // top to left
         path[i].direction = 'tl'
-      }
-
-      else if ((currentX < previousX && currentX === nextX) && (currentY === previousY && currentY > nextY)) {
+      } else if ((currentX < previousX && currentX === nextX) && (currentY === previousY && currentY > nextY)) {
         // right to top
         path[i].direction = 'tr'
-      }
-
-      else if ((currentX === previousX && currentX < nextX) && (currentY > previousY && currentY === nextY)) {
+      } else if ((currentX === previousX && currentX < nextX) && (currentY > previousY && currentY === nextY)) {
         // top to right
         path[i].direction = 'tr'
       }

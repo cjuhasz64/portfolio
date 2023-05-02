@@ -3,7 +3,9 @@ export enum Pages {
     SKILLS,
     ABOUT,
     PROJECTS,
-    SEARCHING
+    SEARCHING,
+    SKILLS_WEB,
+    SKILLS_DESKTOP
 }
 
 export enum Links {
@@ -16,5 +18,13 @@ export enum SearchAction {
     CLEAR,
     WALL,
     SOURCE,
+    WEIGHT
+}
+
+export enum CellState {
+    SOURCE,
+    EMPTY,
+    WALL,
+    TARGET,
     WEIGHT
 }

@@ -145,7 +145,7 @@ export default class App extends Component<Props, State> {
             { currentPage === Pages.SKILLS ? 
               <>
                 <div className="md:shrink-0">
-                  skills
+        
                 </div>
               </>
               :

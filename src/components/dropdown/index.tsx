@@ -85,7 +85,7 @@ export default class DropDown extends Component<Props, State> {
         >
             <div className={`h-14 text-md font-semibold dark:hover:text-slate-800 ${focus ? 'dark:text-slate-800 text-white' : 'text-white'} pt-4 ${isDisabled ? 'opacity-25' : ''}`} >{ selectedOption === '' ? 'Select an Algorithm!' : selectedOption === 'A Star' ? 'A Star (Unweighted)' : selectedOption}</div>
             {focus ? 
-              <div className={`w-[11.5rem] absolute rounded-b-md cursor-pointer text-center divide-y dark:bg-slate-600 duration-200 z-10`}>
+              <div className={`w-[11.5rem] absolute rounded-b-md cursor-pointer text-center divide-y dark:bg-slate-600 duration-200 z-30`}>
                 { drawOptions }
               </div>
             :

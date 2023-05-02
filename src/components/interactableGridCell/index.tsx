@@ -1,12 +1,5 @@
 import { Component } from 'react';
-
-enum CellState {
-  SOURCE,
-  EMPTY,
-  WALL,
-  TARGET,
-  WEIGHT
-}
+import { CellState } from '../../config/enums';
 
 interface Props { 
   theme?: string,
@@ -14,7 +7,7 @@ interface Props {
   darkSymbolLink: string,
   title?: JSX.Element,
   scale?: string,
-  focusHeight?: string,
+  customTranslate?: string,
   color: string,
   darkColor?: string,
   hoverColor?: string,
@@ -22,11 +15,12 @@ interface Props {
   onClick?: () => void
   isDisabled?: boolean,
   secondaryFunction?: (args1: CellState) => void,
-  cellState?: CellState
+  cellState?: CellState,
+  getAttention?: boolean
 }
 
 interface State {
-  focus: boolean
+  hover: boolean
 }
 
 
@@ -35,7 +29,7 @@ export default class InteractableGridCell extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      focus: false
+      hover: false
     };
   }
 
@@ -46,17 +40,17 @@ export default class InteractableGridCell extends Component<Props, State> {
   setIsFocus (isFocus: boolean): void {
     if (isFocus){
       this.setState({
-        focus: true
+        hover: true
       })
     } else {
       this.setState({
-        focus: false
+        hover: false
       })
     } 
   }
 
   render () {
-    const { darkSymbolLink, lightSymbolLink, title, scale, focusHeight, theme, onClick, isDisabled, secondaryFunction, cellState} = this.props;
+    const { darkSymbolLink, lightSymbolLink, title, scale, customTranslate, theme, onClick, isDisabled, secondaryFunction, cellState, getAttention} = this.props;
 
     const {
       color,
@@ -65,27 +59,36 @@ export default class InteractableGridCell extends Component<Props, State> {
       darkHoverColor
     } = this.props
 
-    const { focus } = this.state;
+    const { hover } = this.state;
 
     return (
-      <div className="relative"
+      <div className={`relative ${getAttention ? 'delay-300 animate-wiggle' : ''} z-20`}
         onMouseEnter={() => this.setIsFocus(true)}
         onMouseLeave={() => this.setIsFocus(false)}
       >
         {
           secondaryFunction && !isDisabled ? 
-          <div className={`bg-red-400 hover:bg-red-500 w-14 h-14 rounded-md ${focus ? '-translate-y-6' : ''} text-center duration-200 absolute cursor-pointer`}><span className='text-xs font-bold text-red-600 hover:text-red-400' onClick={() => secondaryFunction(cellState!)}>CLEAR</span></div> :
+          <div className={`bg-red-400 hover:bg-red-500 w-14 h-14 rounded-md ${hover ? '-translate-y-6' : ''} text-center duration-200 absolute cursor-pointer`}>
+            <span className='text-xs font-bold text-red-600 hover:text-red-400' onClick={() => secondaryFunction(cellState!)}>CLEAR</span>
+          </div> :
           null
         }
       
         <div 
           onClick={onClick} 
-          className={`${focus ? hoverColor + ' ' + darkHoverColor : color + ' ' +  darkColor} w-14 ${focus ? title && !isDisabled ? focusHeight ? 'h-24' : 'h-20' : null : 'h-14'} duration-200 cursor-pointer absolute hover:drop-shadow-lg text-center rounded-md z-10`}
+          className={`${hover ? hoverColor + ' ' + darkHoverColor : color + ' ' +  darkColor} w-14 duration-200 cursor-pointer absolute drop text-center rounded-md z-10 select-none`}
           >
             <img src={ theme === 'dark' ? darkSymbolLink : lightSymbolLink} alt="Italian Trulli" className={`${scale ? scale : 'scale-90'} fill-red-400 ${ isDisabled ? 'opacity-25' : ''}`} />
-            <p className='text-xs font-semibold text-white dark:text-slate-800'>{ focus && !isDisabled ? title : ''}</p>
         </div>
+        {
+          !isDisabled ? 
+          <div className={`${hover ? hoverColor + ' ' + darkHoverColor : color + ' ' +  darkColor} w-14 h-14 rounded-md ${hover && title ? customTranslate ? customTranslate : 'translate-y-6' : ''} text-center duration-200 absolute cursor-pointer`}>
+            <div className='text-xs font-bold text-white bottom-0 left-0 right-0 absolute pb-2'> {title} </div>
+          </div> :
+        null
+        }
       </div>
+  
     )
   }
 }

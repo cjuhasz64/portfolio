@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { Pages, Links } from '../../config/enums';
 import InteractableGridCell from '../interactableGridCell';
+import PercentageGridCell from '../percentageGridCell';
 
 import about from '../.././images/about.png'
 import projects from '../.././images/projects.png'
@@ -21,6 +22,25 @@ import back_dark from '../.././images/back_dark.png'
 import search from '../.././images/projects/search.png'
 import search_dark from '../.././images/projects/search_dark.png'
 
+import webdev from '../.././images/skills/webdev.png'
+import webdev_dark from '../.././images/skills/webdev_dark.png'
+
+import java_logo from '../.././images/skills/java.png'
+import database from '../.././images/skills/database.png'
+import kotlin_logo from '../.././images/skills/kotlin_logo.png'
+import electron_logo from '../.././images/skills/electron_logo.png'
+import cplusplus_logo from '../.././images/skills/cplusplus_logo.png'
+import csharp_logo from '../.././images/skills/csharp_logo.png'
+
+import react_logo from '../../images/skills/weddev/react.png'
+import tailwind_logo from '../../images/skills/weddev/tailwind.png'
+import ts_logo from '../../images/skills/weddev/ts.png'
+import js_logo from '../../images/skills/weddev/js.png'
+import php_logo from '../../images/skills/weddev/php.png'
+import node_logo from '../../images/skills/weddev/node.png'
+
+
+
 
 interface Props { 
   currentPage: Pages,
@@ -39,13 +59,6 @@ interface State {
 
 
 export default class Grid extends Component<Props, State> {
-
-  // constructor(props: Props) {
-  //   super(props);
-  // }
-
-  componentDidMount(): void {
-  }
 
   getLayerPos (index: number, gridWidth: number, gridHeight: number): number {
     const distanceFromLeft: number = index % gridWidth === 0 ? gridWidth : index % gridWidth;
@@ -83,8 +96,8 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={ skills_dark } 
               color='bg-red-400' 
               darkColor='dark:bg-green-500'
-              hoverColor='hover:bg-red-500'
-              darkHoverColor='dark:hover:bg-green-300'
+              hoverColor='bg-red-500'
+              darkHoverColor='dark:bg-green-300'
               scale='scale-75'
             />)
             continue;
@@ -101,9 +114,9 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={about_dark} 
               color='bg-red-400'  
               darkColor='dark:bg-green-500'
-              hoverColor='hover:bg-red-500'
-              darkHoverColor='dark:hover:bg-green-300' 
-              focusHeight='28'
+              hoverColor='bg-red-500'
+              darkHoverColor='dark:bg-green-300' 
+              customTranslate='translate-y-10'
             />)
             continue;
           }
@@ -118,8 +131,8 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={ github } 
               darkSymbolLink={github_dark} 
               color='bg-purple-300' 
-              hoverColor='hover:bg-purple-400' 
-              darkColor='hover:bg-purple-400'
+              hoverColor='bg-purple-400' 
+              darkColor='bg-purple-400'
               darkHoverColor='bg-purple-300'
               scale='scale-75' 
             />)
@@ -137,8 +150,8 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={projects_dark} 
               color='bg-red-400' 
               darkColor='dark:bg-green-500'
-              hoverColor='hover:bg-red-500'
-              darkHoverColor='dark:hover:bg-green-300'
+              hoverColor='bg-red-500'
+              darkHoverColor='dark:bg-green-300'
               scale='scale-75'
             />)
             continue;
@@ -178,7 +191,7 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={back} 
               darkSymbolLink={back_dark} 
               color='bg-blue-500' 
-              hoverColor='hover:bg-blue-600'
+              hoverColor='bg-blue-600'
               scale='scale-75'
             />)
             continue;
@@ -221,7 +234,7 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={back} 
               darkSymbolLink={back_dark} 
               color='bg-blue-500' 
-              hoverColor='hover:bg-blue-600'
+              hoverColor='bg-blue-600'
               scale='scale-75'
             />)
             continue;
@@ -232,13 +245,13 @@ export default class Grid extends Component<Props, State> {
             output.push(
             <InteractableGridCell 
               title={<span>Search<br/>Visual</span>}
-              focusHeight='28'
+              customTranslate='translate-y-10'
               onClick={() => navigate(Pages.SEARCHING)}
               theme={theme} 
               lightSymbolLink={search} 
               darkSymbolLink={search_dark} 
               color='bg-orange-400' 
-              hoverColor='hover:bg-orange-500'
+              hoverColor='bg-orange-500'
               scale='scale-75'
             />)
             continue;
@@ -246,6 +259,7 @@ export default class Grid extends Component<Props, State> {
 
           break;
         case Pages.SKILLS:
+
           if (fullBackground ? i === 33 : i === 33) {
             // back
             output.push(
@@ -255,25 +269,231 @@ export default class Grid extends Component<Props, State> {
               lightSymbolLink={back} 
               darkSymbolLink={back_dark} 
               color='bg-blue-500' 
-              hoverColor='hover:bg-blue-600'
+              hoverColor='bg-blue-600'
               scale='scale-75'
             />)
             continue;
           }
-          break; 
-      }
+
+          if (fullBackground ? i === 41 : i === 41) {
+            // webdev link
+            output.push(
+            <InteractableGridCell
+            onClick={() => navigate(Pages.SKILLS_WEB)} 
+              theme={theme} 
+              lightSymbolLink={webdev} 
+              darkSymbolLink={webdev_dark} 
+              color='bg-teal-300' 
+              hoverColor='bg-teal-400'
+              scale='scale-75'
+              title={<span>Web<br/>Dev</span>}
+              customTranslate='translate-y-10'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 44 : i === 44) {
+            // JAVA
+            output.push(
+            <PercentageGridCell 
+              symbol={java_logo}
+              title={<span>Java/<br/>JavaFX</span>}
+              exactPercentHeight={'h-[2.8rem]'}
+              percentColor={'bg-green-500'}
+              delayMultiple={1}
+              customTranslate='translate-y-10'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 55 : i === 55) {
+            // SQL
+            output.push(
+            <PercentageGridCell 
+              symbol={database}
+              title={<span>SQL</span>}
+              exactPercentHeight={'h-[2.6rem]'}
+              percentColor={'bg-green-400'}
+              delayMultiple={2}
+              scale='scale-[0.7]'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 69 : i === 69) {
+            // c++
+            output.push(
+            <PercentageGridCell 
+              symbol={cplusplus_logo}
+              title={<span>C++</span>}
+              exactPercentHeight={'h-[1.9rem]'}
+              percentColor={'bg-green-400'}
+              delayMultiple={3}
+              scale='scale-[0.7]'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 79 : i === 79) {
+            // KOTLIN
+            output.push(
+            <PercentageGridCell 
+              symbol={kotlin_logo}
+              title={<span>Kotlin</span>}
+              exactPercentHeight={'h-[1.75rem]'}
+              percentColor={'bg-yellow-500'}
+              delayMultiple={4}
+              scale='scale-[0.7]'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 92 : i === 92) {
+            // electron
+            output.push(
+            <PercentageGridCell 
+              symbol={electron_logo}
+              title={<span>Electron</span>}
+              exactPercentHeight={'h-[1.75rem]'}
+              percentColor={'bg-yellow-500'}
+              delayMultiple={5}
+              scale='scale-[0.7]'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 88 : i === 88) {
+            // c#
+            output.push(
+            <PercentageGridCell 
+              symbol={csharp_logo}
+              title={<span>C#</span>}
+              exactPercentHeight={'h-[1.75rem]'}
+              percentColor={'bg-yellow-500'}
+              delayMultiple={6}
+              scale='scale-[0.7]'
+            />)
+            continue;
+          }
+
+          break;
+
+        case Pages.SKILLS_WEB:
+
+          if (fullBackground ? i === 41 : i === 41) {
+            // back
+            output.push(
+            <InteractableGridCell 
+              onClick={() => navigate(Pages.SKILLS)}
+              theme={theme} 
+              lightSymbolLink={back} 
+              darkSymbolLink={back_dark} 
+              color='bg-blue-500' 
+              hoverColor='bg-blue-600'
+              scale='scale-75'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 43 : i === 43) {
+            output.push(
+            <PercentageGridCell 
+              symbol={react_logo}
+              title={<span>React</span>}
+              exactPercentHeight={'h-[3rem]'}
+              percentColor={'bg-green-500'}
+              delayMultiple={1}
+            />
+            )
+            continue;
+          }
+
+          if (fullBackground ? i === 68 : i === 68) {
+            output.push(
+            <PercentageGridCell 
+              symbol={tailwind_logo}
+              title={<span>Tailwind</span>}
+              exactPercentHeight={'h-[2.2rem]'}
+              percentColor={'bg-green-400'}
+              delayMultiple={2}
+            />
+            )
+            continue;
+          }
+
+          if (fullBackground ? i === 39 : i === 101) {
+            output.push(
+            <PercentageGridCell 
+              symbol={node_logo}
+              title={<span>Node</span>}
+              exactPercentHeight={'h-[2.2rem]'}
+              percentColor={'bg-green-400'}
+              delayMultiple={3}
+            />
+            )
+            continue;
+          }
+
+          if (fullBackground ? i === 64 : i === 64) {
+        
+            output.push(
+            <PercentageGridCell 
+              symbol={js_logo}
+              title={<span>Java<br/>Script</span>}
+              exactPercentHeight={'h-[2.7rem]'}
+              percentColor={'bg-green-400'}
+              scale='scale-[.60]'
+              customTranslate='translate-y-10'
+              delayMultiple={4}
+            />
+            )
+            continue;
+          }
+
+          if (fullBackground ? i === 78 : i === 78) {
+            output.push(
+            <PercentageGridCell 
+              symbol={ts_logo}
+              title={<span>Type<br/>Script</span>}
+              exactPercentHeight={'h-[2.5rem]'}
+              percentColor={'bg-green-400'}
+              scale='scale-[.60]'
+              customTranslate='translate-y-10'
+              delayMultiple={5}
+            />
+            )
+            continue;
+          }
+
+          if (fullBackground ? i === 93 : i === 93) {
+            output.push(
+            <PercentageGridCell 
+              symbol={php_logo}
+              title={<span>PHP</span>}
+              exactPercentHeight={'h-[1.8rem]'}
+              percentColor={'bg-yellow-500'}
+              scale='scale-[.70]'
+              delayMultiple={6}
+            />
+            )
+            continue;
+          }
+          break;
       
+      } 
       if (fullBackground ? i === 2 : i === 21) {
         output.push(
-        <InteractableGridCell 
-          onClick={toggleDark} 
-          theme={ theme } 
-          lightSymbolLink={ sun } 
-          darkSymbolLink={ moon } 
-          color='bg-blue-300'
-          darkColor='dark:bg-black'
-          scale='scale-75'
-          />)
+          <InteractableGridCell 
+            onClick={toggleDark} 
+            theme={theme} 
+            lightSymbolLink={sun} 
+            darkSymbolLink={moon} 
+            color='bg-blue-300'
+            darkColor='dark:bg-black'
+            hoverColor='bg-blue-400'
+            darkHoverColor='dark:bg-zinc-800'
+            scale='scale-75'
+            />)
         continue;
       }
 
