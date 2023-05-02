@@ -339,16 +339,17 @@ export default class Grid extends Component<Props, State> {
             output.push(
             <PercentageGridCell 
               symbol={kotlin_logo}
-              title={<span>Kotlin</span>}
+              title={<span>Kotlin<br/>Android</span>}
               exactPercentHeight={'h-[1.75rem]'}
               percentColor={'bg-yellow-500'}
               delayMultiple={4}
               scale='scale-[0.7]'
+              customTranslate='translate-y-10'
             />)
             continue;
           }
 
-          if (fullBackground ? i === 92 : i === 92) {
+          if (fullBackground ? i === 104 : i === 104) {
             // electron
             output.push(
             <PercentageGridCell 
