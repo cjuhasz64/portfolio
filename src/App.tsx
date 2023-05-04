@@ -114,7 +114,7 @@ export default class App extends Component<Props, State> {
               <>
                 <div className="md:text-left">
                   <span className="uppercase text-2xl text-black dark:text-white font-semibold block text-center">CAMERON JUHASZ</span>
-                  <span className="text-lg text-black dark:text-white font-semibold block text-center">Bacholar of Computer Science</span>
+                  <span className="text-lg text-black dark:text-white font-semibold block text-center">Bachelor of Computer Science</span>
                   <span className="text-md text-black dark:text-white block text-center">Software Development</span>
                 </div>
               </>
