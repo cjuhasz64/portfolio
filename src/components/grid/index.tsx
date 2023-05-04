@@ -90,7 +90,7 @@ export default class Grid extends Component<Props, State> {
       switch (currentPage) {
         case Pages.HOME:
           // skills
-          if (fullBackground ? i === 45 : i === 31) {
+          if (fullBackground ? i === 45 : i === 45) {
             output.push(
             <InteractableGridCell 
               onClick={() => navigate(Pages.SKILLS)}
@@ -108,7 +108,7 @@ export default class Grid extends Component<Props, State> {
           }
 
           // about
-          if (fullBackground ? i === 52 : i === 41) {
+          if (fullBackground ? i === 52 : i === 92) {
             output.push(
             <InteractableGridCell 
               onClick={() => navigate(Pages.ABOUT)}
@@ -144,7 +144,7 @@ export default class Grid extends Component<Props, State> {
           // }
 
           // projects
-          if (fullBackground ? i === 104 : i === 113) {
+          if (fullBackground ? i === 104 : i === 101) {
             output.push(
             <InteractableGridCell 
             onClick={() => navigate(Pages.PROJECTS)}
