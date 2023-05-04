@@ -81,6 +81,8 @@ export default class App extends Component<Props, State> {
   extNavigate (targetLink: Links) {
     if (targetLink === Links.GITHUB) {
       window.open('https://github.com/cjuhasz64', "_blank", "noreferrer");
+    } else if (targetLink === Links.LINKEDIN) {
+      window.open('https://www.linkedin.com/in/cameron-juhasz-330511257/', "_blank", "noreferrer");
     }
   }
 

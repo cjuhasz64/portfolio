@@ -16,11 +16,13 @@ interface Props {
   isDisabled?: boolean,
   secondaryFunction?: (args1: CellState) => void,
   cellState?: CellState,
-  getAttention?: boolean
+  getAttention?: boolean,
+  popup?: string
 }
 
 interface State {
-  hover: boolean
+  hover: boolean,
+  showPopup: boolean
 }
 
 
@@ -29,7 +31,8 @@ export default class InteractableGridCell extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      hover: false
+      hover: false,
+      showPopup: false
     };
   }
 
@@ -45,8 +48,15 @@ export default class InteractableGridCell extends Component<Props, State> {
     } 
   }
 
+  triggerPopup () {
+    this.setState({ showPopup: true })
+    setTimeout(() => {
+      this.setState({ showPopup: false })
+    }, 1000)
+  }
+
   render () {
-    const { darkSymbolLink, lightSymbolLink, title, scale, customTranslate, theme, onClick, isDisabled, secondaryFunction, cellState, getAttention} = this.props;
+    const { darkSymbolLink, lightSymbolLink, title, scale, customTranslate, theme, onClick, isDisabled, secondaryFunction, cellState, getAttention, popup} = this.props;
 
     const {
       color,
@@ -55,13 +65,16 @@ export default class InteractableGridCell extends Component<Props, State> {
       darkHoverColor
     } = this.props
 
-    const { hover } = this.state;
+    const { hover, showPopup } = this.state;
+
 
     return (
       <div className={`relative ${getAttention ? 'delay-300 animate-wiggle' : ''} z-20`}
         onMouseEnter={() => this.setIsFocus(true)}
         onMouseLeave={() => this.setIsFocus(false)}
+        onClick={() => this.triggerPopup()}
       >
+         <div className={`absolute w-14 text-center bg-slate-300 -translate-y-7 rounded-md pointer-events-none text-xs font-bold p-1 ${ showPopup && popup ? '' : 'opacity-0'} duration-300`}>{ popup }</div>
         {
           secondaryFunction && !isDisabled ? 
           <div className={`bg-red-400 hover:bg-red-500 w-14 h-14 rounded-md ${hover ? '-translate-y-6' : ''} text-center duration-200 absolute cursor-pointer`}>
@@ -69,7 +82,6 @@ export default class InteractableGridCell extends Component<Props, State> {
           </div> :
           null
         }
-      
         <div 
           onClick={onClick} 
           className={`${hover ? hoverColor + ' ' + darkHoverColor : color + ' ' +  darkColor} w-14 duration-200 cursor-pointer absolute drop text-center rounded-md z-10 select-none`}

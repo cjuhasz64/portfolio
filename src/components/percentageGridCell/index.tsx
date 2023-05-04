@@ -31,7 +31,7 @@ export default class PercentageGridCell extends Component<Props, State> {
 
     setTimeout(() => {
       this.setShowPercentage(true)
-    }, 100 * delayMultiple)
+    }, 50 * delayMultiple)
 
   }
 
@@ -67,7 +67,7 @@ export default class PercentageGridCell extends Component<Props, State> {
 
 
     return (
-      <div className={`relative`}
+      <div className={`relative select-none`}
         onMouseEnter={() => {this.setIsHover(true)}}
         onMouseLeave={() => {this.setIsHover(false)}}
         >

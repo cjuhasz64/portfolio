@@ -3,15 +3,20 @@ import { Pages, Links } from '../../config/enums';
 import InteractableGridCell from '../interactableGridCell';
 import PercentageGridCell from '../percentageGridCell';
 
+
 import about from '../.././images/about.png'
 import projects from '../.././images/projects.png'
 import skills from '../.././images/skills.png'
 import github from '../.././images/github.png'
+import linkedin from '../.././images/linkedin.png'
+import email from '../.././images/email.png'
 
 import about_dark from '../.././images/about_dark.png'
 import projects_dark from '../.././images/projects_dark.png'
 import skills_dark from '../.././images/skills_dark.png'
 import github_dark from '../.././images/github_dark.png'
+import linkedin_dark from '../.././images/linkedin_dark.png'
+import email_dark from '../.././images/email_dark.png'
 
 import sun from '../.././images/sun.png'
 import moon from '../.././images/moon.png'
@@ -223,6 +228,59 @@ export default class Grid extends Component<Props, State> {
               )
             continue;
           }
+
+          if (fullBackground ? i === 89 : i === 89) {
+            output.push(
+            <InteractableGridCell 
+              onClick={() => {navigator.clipboard.writeText('cjuhasz64@gmail.com')}}
+              title={<span>Email</span>} 
+              theme={ theme }
+              lightSymbolLink={ email } 
+              darkSymbolLink={email_dark} 
+              color='bg-red-400' 
+              darkColor='dark:bg-red-500'
+              hoverColor='bg-red-500'
+              darkHoverColor='dark:bg-red-400'
+              scale='scale-75' 
+              popup='Copied!'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 90 : i === 90) {
+            output.push(
+            <InteractableGridCell 
+              onClick={() => extNavigate(Links.GITHUB)} 
+              title={<span>GitHub</span>} 
+              theme={ theme } 
+              lightSymbolLink={ github } 
+              darkSymbolLink={github_dark} 
+              color='bg-purple-300' 
+              hoverColor='bg-purple-400' 
+              darkColor='bg-purple-400'
+              darkHoverColor='bg-purple-300'
+              scale='scale-75' 
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 91 : i === 91) {
+            output.push(
+            <InteractableGridCell 
+              onClick={() => extNavigate(Links.LINKEDIN)} 
+              title={<span>LinkedIn</span>} 
+              theme={ theme } 
+              lightSymbolLink={ linkedin } 
+              darkSymbolLink={linkedin_dark} 
+              color='bg-blue-500' 
+              darkColor='dark:bg-blue-600'
+              hoverColor='bg-blue-600'
+              darkHoverColor='dark:bg-blue-500'
+              scale='scale-75' 
+            />)
+            continue;
+          }
+
           break;
         case Pages.PROJECTS:
           if (fullBackground ? i === 33 : i === 33) {

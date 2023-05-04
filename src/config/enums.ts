@@ -9,7 +9,8 @@ export enum Pages {
 }
 
 export enum Links {
-    GITHUB
+    GITHUB,
+    LINKEDIN
 }
 
 export enum SearchAction {
