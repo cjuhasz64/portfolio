@@ -81,7 +81,7 @@ export default class Grid extends Component<Props, State> {
     const thirdLayerChance = 70;
 
     const redElement: JSX.Element = <div className="bg-blue-300 dark:bg-slate-600 w-14 h-14 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 rounded-md"></div>
-    const testElement: JSX.Element = <div className="bg-red-600 duration-200 rounded-md"></div>
+    // const testElement: JSX.Element = <div className="bg-red-600 duration-200 rounded-md"></div>
     const clearElement: JSX.Element = <div className="w-14 h-14"></div>
 
     let output: JSX.Element[] = [];

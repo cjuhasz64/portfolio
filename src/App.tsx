@@ -1,7 +1,5 @@
 import { Component } from 'react';
 
-import profile from './images/profile.jpg'
-
 import Grid from './components/grid';
 import SearchGame from './components/seachGame';
 
