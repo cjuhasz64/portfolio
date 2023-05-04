@@ -56,31 +56,31 @@ export default class GameCell extends Component<Props, State> {
 
     if (direction === 'y'){
       return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(90)' className='relative'>
-                <line x1="14" y1="0" x2="14" y2="28" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="14" y1="0" x2="14" y2="28" stroke="rgb(168 85 247)" strokeWidth="12"/>
               </svg>
     } else if (direction === 'x'){
       return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" className='relative'>
-                <line x1="14" y1="0" x2="14" y2="28" stroke="rgb(168 85 247)" stroke-width="12" />
+                <line x1="14" y1="0" x2="14" y2="28" stroke="rgb(168 85 247)" strokeWidth="12" />
               </svg> 
     } else if (direction === 'bl'){
       return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(180)' className='relative'>
-                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
-                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" strokeWidth="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" strokeWidth="12"/>
               </svg>
     } else if (direction === 'tl'){
       return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(270)' className='relative'>
-                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
-                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" strokeWidth="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" strokeWidth="12"/>
               </svg>
     } else if (direction === 'tr'){
       return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='' className='relative'>
-                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
-                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" strokeWidth="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" strokeWidth="12"/>
               </svg>
     } else if (direction === 'br'){
       return  <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" transform='rotate(90)' className='relative'>
-                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" stroke-width="12"/>
-                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" stroke-width="12"/>
+                <line x1="14" y1="0" x2="14" y2="20" stroke="rgb(168 85 247)" strokeWidth="12"/>
+                <line x1="8" y1="14" x2="28" y2="14" stroke="rgb(168 85 247)" strokeWidth="12"/>
               </svg>
     }
     return null;

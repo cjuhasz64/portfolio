@@ -96,7 +96,6 @@ export default class App extends Component<Props, State> {
             theme={theme}
             toggleDark={this.toggleDarkMode}
           />
-
           :
           <Grid 
             currentPage={currentPage} 

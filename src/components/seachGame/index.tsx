@@ -582,6 +582,8 @@ export default class SearchGame extends Component<Props, State> {
         <div className={`grid gap-2 grid-cols-20 grid-rows-1 w-max`}>
           {controls}
         </div>
+
+        
         <div className={`grid gap-1 grid-cols-40 grid-rows-1 w-max pt-1`}>
           { this.getGameCells() }
         </div>

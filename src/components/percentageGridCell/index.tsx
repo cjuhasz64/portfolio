@@ -31,7 +31,7 @@ export default class PercentageGridCell extends Component<Props, State> {
 
     setTimeout(() => {
       this.setShowPercentage(true)
-    }, 200 * delayMultiple)
+    }, 100 * delayMultiple)
 
   }
 
@@ -46,8 +46,6 @@ export default class PercentageGridCell extends Component<Props, State> {
       })
     } 
   }
-
-  // 3.5rem
 
   setIsHover (isFocus: boolean): void {
     if (isFocus){

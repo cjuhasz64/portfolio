@@ -33,10 +33,6 @@ export default class InteractableGridCell extends Component<Props, State> {
     };
   }
 
-  componentDidMount(): void {
-    // console.log(this.props.focusHeight)
-  }
-
   setIsFocus (isFocus: boolean): void {
     if (isFocus){
       this.setState({
