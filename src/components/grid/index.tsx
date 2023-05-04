@@ -81,7 +81,7 @@ export default class Grid extends Component<Props, State> {
     const thirdLayerChance = 70;
 
     const redElement: JSX.Element = <div className="bg-blue-300 dark:bg-slate-600 w-14 h-14 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 rounded-md"></div>
-    // const testElement: JSX.Element = <div className="bg-red-600 duration-200 rounded-md"></div>
+    const testElement: JSX.Element = <div className="bg-red-600 duration-200 rounded-md"></div>
     const clearElement: JSX.Element = <div className="w-14 h-14"></div>
 
     let output: JSX.Element[] = [];
@@ -89,7 +89,6 @@ export default class Grid extends Component<Props, State> {
     for (let i = 1; i <= height * width; i++) {
       switch (currentPage) {
         case Pages.HOME:
-
           // skills
           if (fullBackground ? i === 45 : i === 31) {
             output.push(
@@ -109,7 +108,7 @@ export default class Grid extends Component<Props, State> {
           }
 
           // about
-          if (fullBackground ? i === 54 : i === 41) {
+          if (fullBackground ? i === 52 : i === 41) {
             output.push(
             <InteractableGridCell 
               onClick={() => navigate(Pages.ABOUT)}
@@ -127,22 +126,22 @@ export default class Grid extends Component<Props, State> {
           }
 
           // github
-          if (fullBackground ? i === 100 : i === 69) {
-            output.push(
-            <InteractableGridCell 
-              onClick={() => extNavigate(Links.GITHUB)} 
-              title={<span>GitHub</span>} 
-              theme={ theme } 
-              lightSymbolLink={ github } 
-              darkSymbolLink={github_dark} 
-              color='bg-purple-300' 
-              hoverColor='bg-purple-400' 
-              darkColor='bg-purple-400'
-              darkHoverColor='bg-purple-300'
-              scale='scale-75' 
-            />)
-            continue;
-          }
+          // if (fullBackground ? i === 100 : i === 69) {
+          //   output.push(
+          //   <InteractableGridCell 
+          //     onClick={() => extNavigate(Links.GITHUB)} 
+          //     title={<span>GitHub</span>} 
+          //     theme={ theme } 
+          //     lightSymbolLink={ github } 
+          //     darkSymbolLink={github_dark} 
+          //     color='bg-purple-300' 
+          //     hoverColor='bg-purple-400' 
+          //     darkColor='dark:bg-purple-400'
+          //     darkHoverColor='dark:bg-purple-300'
+          //     scale='scale-75' 
+          //   />)
+          //   continue;
+          // }
 
           // projects
           if (fullBackground ? i === 104 : i === 113) {
@@ -161,30 +160,34 @@ export default class Grid extends Component<Props, State> {
             />)
             continue;
           }
-          
-          if (fullBackground) {
-            if ((i > 77 && i < 83) || (i > 65 && i < 71)) {
-              output.push(clearElement)
-              continue;
-            }
-          } else {
-            if (i > 76 && i < 81) {
-              output.push(<div className="bg-blue-300 dark:bg-slate-600 w-14 h-3/4 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 rounded-md"></div>)
-              continue;
-            }
-            if (i > 88 && i < 93) {
-              output.push(clearElement)
-              continue;
-            }
-            if (i > 100 && i < 105) {
+            if (i === 69 || i === 81) {
               output.push(
                 <div className="relative">
-                  <div className="bg-blue-300 dark:bg-slate-600 w-14 h-3/4 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 absolute bottom-0 rounded-md"></div>
+                  <div className="bg-blue-300 dark:bg-slate-600 w-3/4 h-14 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 absolute right-0 rounded-md"></div>
                 </div>
                 )
               continue;
             }
-          }
+
+            if (i === 64 || i === 76) {
+              output.push(
+                <div className="relative">
+                  <div className="bg-blue-300 dark:bg-slate-600 w-3/4 h-14 hover:bg-blue-400 hover:dark:bg-blue-200 duration-200 absolute left-0 rounded-md"></div>
+                </div>
+                )
+              continue;
+            }
+
+            if (i > 64 && i < 69) {
+              output.push(clearElement)
+              continue;
+            }
+
+            if (i > 76 && i < 81) {
+              output.push(clearElement)
+            continue;
+            }
+          
           break;
         case Pages.ABOUT:
           if (fullBackground ? i === 33 : i === 33) {
@@ -257,8 +260,8 @@ export default class Grid extends Component<Props, State> {
               darkSymbolLink={github_dark} 
               color='bg-purple-300' 
               hoverColor='bg-purple-400' 
-              darkColor='bg-purple-400'
-              darkHoverColor='bg-purple-300'
+              darkColor='dark:bg-purple-400'
+              darkHoverColor='dark:bg-purple-300'
               scale='scale-75' 
             />)
             continue;
@@ -587,8 +590,6 @@ export default class Grid extends Component<Props, State> {
       }
       output.push(redElement)
     }
-    
-    
     return (
       <div className={`grid gap-2 grid-cols-12 grid-rows-12 w-max absolute`}>
         {output}

@@ -15,7 +15,6 @@ interface State {
   hover: boolean
 }
 
-
 export default class PercentageGridCell extends Component<Props, State> {
 
   constructor(props: Props) {
@@ -60,11 +59,8 @@ export default class PercentageGridCell extends Component<Props, State> {
   }
 
   render() {
-
     const { symbol, title, exactPercentHeight, percentColor, scale, customTranslate } = this.props;
     const { showPercentage, hover } = this.state;
-
-
 
     return (
       <div className={`relative select-none`}

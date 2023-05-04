@@ -114,13 +114,10 @@ export default class App extends Component<Props, State> {
           <div className="md:flex">
             { currentPage === Pages.HOME ? 
               <>
-                <div className="md:shrink-0">
-                  <img className="h-48 w-48 md:max-h-48 mx-auto object-cover rounded-full" src={ profile } alt="Italian Trulli"/>
-                </div>
-                <div className="p-6 md:p-8 md:pt-12 text-center md:text-left">
-                  <p className="uppercase text-2xl text-black dark:text-white font-semibold ">CAMERON JUHASZ</p>
-                  <p className="text-lg text-black dark:text-white font-semibold">Bacholar of Computer Science</p>
-                  <p className="text-md text-black dark:text-white">Software Development</p>
+                <div className="md:text-left">
+                  <span className="uppercase text-2xl text-black dark:text-white font-semibold block text-center">CAMERON JUHASZ</span>
+                  <span className="text-lg text-black dark:text-white font-semibold block text-center">Bacholar of Computer Science</span>
+                  <span className="text-md text-black dark:text-white block text-center">Software Development</span>
                 </div>
               </>
               :

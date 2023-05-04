@@ -25,7 +25,6 @@ interface State {
   showPopup: boolean
 }
 
-
 export default class InteractableGridCell extends Component<Props, State> {
 
   constructor(props: Props) {
