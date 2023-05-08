@@ -124,7 +124,7 @@ export default class Grid extends Component<Props, State> {
             />)
             continue;
           }
-
+          // about
           // github
           // if (fullBackground ? i === 100 : i === 69) {
           //   output.push(
