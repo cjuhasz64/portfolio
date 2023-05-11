@@ -27,6 +27,9 @@ import back_dark from '../.././images/back_dark.png'
 import search from '../.././images/projects/search.png'
 import search_dark from '../.././images/projects/search_dark.png'
 
+import blob from '../.././images/projects/blob.png'
+import blob_dark from '../.././images/projects/blob_dark.png'
+
 import webdev from '../.././images/skills/webdev.png'
 import webdev_dark from '../.././images/skills/webdev_dark.png'
 
@@ -314,6 +317,23 @@ export default class Grid extends Component<Props, State> {
               color='bg-orange-400' 
               hoverColor='bg-orange-500'
               scale='scale-75'
+            />)
+            continue;
+          }
+
+          if (fullBackground ? i === 56 : i === 56) {
+            // sorting navigate
+            output.push(
+            <InteractableGridCell 
+              title={<span>SVG Blob<br/>Gen</span>}
+              customTranslate='translate-y-10'
+              onClick={() => extNavigate(Links.GITHUB_BLOBGEN)}
+              theme={theme} 
+              lightSymbolLink={blob} 
+              darkSymbolLink={blob_dark} 
+              color='bg-red-400' 
+              hoverColor='bg-red-500'
+              scale='scale-90'
             />)
             continue;
           }
